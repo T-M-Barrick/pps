@@ -4,7 +4,8 @@ FROM nginx:alpine
 # Copiamos los archivos HTML, CSS y JS al directorio donde Nginx los sirve
 COPY . /usr/share/nginx/html
 
-# Exponemos el puerto 80
-EXPOSE 80
+# Copiamos la configuración de Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# El contenedor ya inicia Nginx automáticamente
+# Nginx corre en primer plano
+CMD ["nginx", "-g", "daemon off;"]
