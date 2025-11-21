@@ -1,1 +1,1 @@
-export const BACKEND_URL = "miturno-production.up.railway.app";
+export const BACKEND_URL = "https://miturno-production.up.railway.app";
