@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -10,7 +9,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./registro-usuario.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-     <link rel="icon" type="favicon" href="../../favicon.ico">
+    <link rel="icon" type="favicon" href="../../favicon.ico">
+
+    <!-- CSS Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 
 <body id="body">
@@ -37,21 +39,41 @@
                         <input type="text" id="dni" placeholder="DNI" required class="sombra-input">
                         <input type="tel" id="telefono" placeholder="Teléfono" required class="sombra-input">
                     </div>
-                     <div class="form-row-2col">
-                        <input type="text" id="direccion" placeholder="Dirección" required class="sombra-input">
-                        <input type="text" id="datos_adicionales" placeholder="Datos adicionales" required class="sombra-input">
-                    </div>
-                    <input type="email" id="email" placeholder="Email" required class="sombra-input">
 
+                    <!-- NUEVO BLOQUE: Provincia / Departamento / Localidad -->
+                    <label class="font-semibold mt-4">Provincia:</label>
+                    <select id="provincia" class="sombra-input" required></select>
+
+                    <label class="font-semibold mt-4">Departamento:</label>
+                    <select id="departamento" class="sombra-input" required disabled></select>
+
+                    <label class="font-semibold mt-4">Localidad:</label>
+                    <select id="localidad" class="sombra-input" required disabled></select>
+
+                    <!-- MAPA -->
+                    <label class="font-semibold mt-4">Selecciona ubicación:</label>
+                    <div id="map" style="height: 250px; border-radius: 8px; margin-bottom: 15px;"></div>
+
+                    <!-- Domicilio autocompletado -->
+                    <input type="text" id="direccion" placeholder="Dirección detectada" required class="sombra-input" readonly>
+
+                    <div class="form-row-2col">
+                        <input type="text" id="datos_adicionales" placeholder="Datos adicionales" class="sombra-input">
+                    </div>
+
+                    <input type="email" id="email" placeholder="Email" required class="sombra-input">
                     <input type="password" id="clave" placeholder="Contraseña" required class="sombra-input">
+
+                    <!-- Inputs ocultos para lat/lng -->
+                    <input type="hidden" id="lat">
+                    <input type="hidden" id="lng">
 
                     <button id="btn-registro" class="btn-rojo" type="submit">Crear Cuenta</button>
                 </form>
 
                 <p id="ya-tienes-cuenta">Ya tienes cuenta, <a href="../../index.html">Inicia sesión</a></p>
 
-                <button id="btn-iniciar-sesion" class="btn-borde" onclick="window.location.href='../../index.html'">Iniciar
-                    Sesión</button>
+                <button id="btn-iniciar-sesion" class="btn-borde" onclick="window.location.href='../../index.html'">Iniciar Sesión</button>
 
             </div>
         </section>
@@ -74,7 +96,131 @@
             <span><i class="fas fa-users"></i> Sobre nosotros</span>
         </div>
     </footer>
-    
+
+    <!-- JS Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- MAPA: obtiene lat/lng + domicilio -->
+     <script type="module">
+        import { BACKEND_URL } from "../../config.js";
+
+        const provSelect = document.getElementById("provincia");
+        const deptoSelect = document.getElementById("departamento");
+        const locSelect = document.getElementById("localidad");
+        const direccionInput = document.getElementById("direccion");
+
+        const latInput = document.getElementById("lat");
+        const lngInput = document.getElementById("lng");
+
+        // =======================
+        // 1) Cargar Provincias
+        // =======================
+        async function cargarProvincias() {
+            const resp = await fetch(`${BACKEND_URL}/georef/provincias`);
+            const data = await resp.json();
+
+            provSelect.innerHTML = "<option value=''>Seleccione provincia</option>";
+            data.forEach(p => {
+                provSelect.innerHTML += `<option value="${p.nombre}">${p.nombre}</option>`;
+            });
+        }
+        cargarProvincias();
+
+        // =======================
+        // 2) Cargar Departamentos
+        // =======================
+        provSelect.onchange = async () => {
+            deptoSelect.disabled = true;
+            locSelect.disabled = true;
+
+            deptoSelect.innerHTML = "<option>Cargando...</option>";
+            
+            const resp = await fetch(`${BACKEND_URL}/georef/departamentos/${provSelect.value}`);
+            const data = await resp.json();
+
+            deptoSelect.innerHTML = "<option value=''>Seleccione departamento</option>";
+            data.forEach(d => {
+                deptoSelect.innerHTML += `<option value="${d.nombre}">${d.nombre}</option>`;
+            });
+
+            deptoSelect.disabled = false;
+        };
+
+        // =======================
+        // 3) Cargar Localidades
+        // =======================
+        deptoSelect.onchange = async () => {
+            locSelect.disabled = true;
+            locSelect.innerHTML = "<option>Cargando...</option>";
+
+            const resp = await fetch(
+                `${BACKEND_URL}/georef/localidades?provincia=${provSelect.value}&departamento=${deptoSelect.value}`
+            );
+            const data = await resp.json();
+
+            locSelect.innerHTML = "<option value=''>Seleccione localidad</option>";
+            data.forEach(l => {
+                locSelect.innerHTML += `<option value="${l.nombre}">${l.nombre}</option>`;
+            });
+
+            locSelect.disabled = false;
+        };
+
+        // =======================
+        // 4) Inicializar Mapa
+        // =======================
+        const map = L.map('map').setView([-34.60, -58.38], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        let marker = null;
+
+        // =======================
+        // 5) Centrar mapa en Localidad
+        // =======================
+        locSelect.onchange = async () => {
+            const prov = provSelect.value;
+            const depto = deptoSelect.value;
+            const loc = locSelect.value;
+
+            const resp = await fetch(
+                `${BACKEND_URL}/georef/coordenadas_localidad?provincia=${prov}&departamento=${depto}&localidad=${loc}`
+            );
+            const data = await resp.json();
+
+            if (data && data.lat && data.lng) {
+                map.setView([data.lat, data.lng], 15);
+            }
+        };
+
+        // =======================
+        // 6) Click en mapa → obtener reverse
+        // =======================
+        map.on("click", async function (e) {
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+
+            latInput.value = lat;
+            lngInput.value = lng;
+
+            if (!marker) {
+                marker = L.marker([lat, lng]).addTo(map);
+            } else {
+                marker.setLatLng([lat, lng]);
+            }
+
+            // Reverse geocoding
+            const resp = await fetch(`${BACKEND_URL}/georef/reverse?lat=${lat}&lng=${lng}`);
+            const data = await resp.json();
+
+            if (data && data.domicilio) {
+                direccionInput.value = data.domicilio;
+            }
+        });
+    </script>
+
     <script type="module" src="./registro-usuario.js"></script>
 
 </body>

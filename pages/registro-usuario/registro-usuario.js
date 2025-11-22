@@ -1,7 +1,4 @@
-console.log("JS DEL REGISTRO CARGADO");
-
 import {BACKEND_URL} from "../../config.js";
-console.log("JS DEL REGISTRO CARGADO2");
 
 async function registrarUsuario(event) {
     event.preventDefault(); // evita que el form recargue la página
@@ -11,7 +8,9 @@ async function registrarUsuario(event) {
     const apellido = document.getElementById("apellido").value.trim();
     const dni = parseInt(document.getElementById("dni").value.trim());
     const email = document.getElementById("email").value.trim();
-    const direccionTexto = document.getElementById("direccion").value.trim();
+    const domicilio = document.getElementById("domicilio").value.trim();
+    const lat = parseFloat(document.getElementById("lat").value);
+    const lng = parseFloat(document.getElementById("lng").value);
     const aclaracion = document.getElementById("datos_adicionales").value.trim();
     const telefono = document.getElementById("telefono").value.trim();
     const password = document.getElementById("clave").value.trim();
@@ -19,9 +18,9 @@ async function registrarUsuario(event) {
     // 2) POR AHORA dirección sin geolocalización real
     // Cuando agregues el mapa, reemplazamos esto por lat/lng reales.
     const direccionObj = {
-        domicilio: direccionTexto,
-        lat: 0,      // ← LO CAMBIAREMOS CUANDO USEMOS GEOREF
-        lng: 0,      // ← LO CAMBIAREMOS CUANDO USEMOS GEOREF
+        domicilio: domicilio,
+        lat: lat,
+        lng: lng,
         aclaracion: aclaracion
     };
 
