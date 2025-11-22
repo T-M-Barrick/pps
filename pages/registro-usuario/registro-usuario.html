@@ -134,11 +134,21 @@
             locSelect.disabled = true;
 
             deptoSelect.innerHTML = "<option>Cargando...</option>";
+
+            const prov = encodeURIComponent(provSelect.value);
             
-            const resp = await fetch(`${BACKEND_URL}/georef/departamentos/${provSelect.value}`);
+            const resp = await fetch(`${BACKEND_URL}/georef/departamentos?provincia=${prov}`);
             const data = await resp.json();
 
             deptoSelect.innerHTML = "<option value=''>Seleccione departamento</option>";
+
+            // Si el backend devolvió un error, evitar romper la app
+            if (!Array.isArray(data)) {
+                console.error("Error al cargar departamentos", data);
+                deptoSelect.innerHTML = "<option>Error al cargar</option>";
+                return;
+            }
+
             data.forEach(d => {
                 deptoSelect.innerHTML += `<option value="${d.nombre}">${d.nombre}</option>`;
             });
@@ -153,9 +163,11 @@
             locSelect.disabled = true;
             locSelect.innerHTML = "<option>Cargando...</option>";
 
+            const prov = encodeURIComponent(provSelect.value);
+            const depto = encodeURIComponent(deptoSelect.value);
+
             const resp = await fetch(
-                `${BACKEND_URL}/georef/localidades?provincia=${provSelect.value}&departamento=${deptoSelect.value}`
-            );
+                `${BACKEND_URL}/georef/localidades?provincia=${prov}&departamento=${depto}`);
             const data = await resp.json();
 
             locSelect.innerHTML = "<option value=''>Seleccione localidad</option>";
@@ -181,9 +193,9 @@
         // 5) Centrar mapa en Localidad
         // =======================
         locSelect.onchange = async () => {
-            const prov = provSelect.value;
-            const depto = deptoSelect.value;
-            const loc = locSelect.value;
+            const prov = encodeURIComponent(provSelect.value);
+            const depto = encodeURIComponent(deptoSelect.value);
+            const loc = encodeURIComponent(locSelect.value);
 
             const resp = await fetch(
                 `${BACKEND_URL}/georef/coordenadas_localidad?provincia=${prov}&departamento=${depto}&localidad=${loc}`
