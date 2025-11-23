@@ -8,7 +8,7 @@ async function registrarUsuario(event) {
     const apellido = document.getElementById("apellido").value.trim();
     const dni = parseInt(document.getElementById("dni").value.trim());
     const email = document.getElementById("email").value.trim();
-    const domicilio = document.getElementById("domicilio").value.trim();
+    const domicilio = document.getElementById("direccion").value.trim();
     const lat = parseFloat(document.getElementById("lat").value);
     const lng = parseFloat(document.getElementById("lng").value);
     const aclaracion = document.getElementById("datos_adicionales").value.trim();
