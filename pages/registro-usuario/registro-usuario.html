@@ -200,12 +200,22 @@
             const resp = await fetch(
                 `${BACKEND_URL}/georef/coordenadas?provincia=${prov}&municipio=${depto}&localidad=${loc}`
             );
+
             const data = await resp.json();
 
-            if (data && data.lat && data.lng) {
-                map.setView([data.lat, data.lng], 15);
+            if (!data || !data.lat || !data.lng) {
+                console.error("Coordenadas no encontradas", data);
+                return;
+            }
+
+            map.setView([data.lat, data.lng], 15);
+
+            // Si también querés mostrar domicilio automáticamente
+            if (data.domicilio) {
+                direccionInput.value = data.domicilio;
             }
         };
+
 
         // =======================
         // 6) Click en mapa → obtener reverse
