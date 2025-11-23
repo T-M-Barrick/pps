@@ -192,7 +192,7 @@
         // =======================
         // 5) Centrar mapa en Localidad
         // =======================
-        locSelect.onchange = async () => {
+        locSelect.addEventListener("change", async () => {
             const prov = encodeURIComponent(provSelect.value);
             const depto = encodeURIComponent(deptoSelect.value);
             const loc = encodeURIComponent(locSelect.value);
@@ -214,8 +214,7 @@
             if (data.domicilio) {
                 direccionInput.value = data.domicilio;
             }
-        };
-
+        });
 
         // =======================
         // 6) Click en mapa → obtener reverse
