@@ -50,12 +50,14 @@
                     <label class="font-semibold mt-4">Localidad:</label>
                     <select id="localidad" class="sombra-input" required disabled></select>
 
+                    <div class="form-row-2col">
+                        <input type="text" id="calle" placeholder="Calle" required class="sombra-input">
+                        <input type="text" id="altura" placeholder="Altura" required class="sombra-input">
+                    </div>
+
                     <!-- MAPA -->
                     <label class="font-semibold mt-4">Selecciona ubicación:</label>
                     <div id="map" style="height: 250px; border-radius: 8px; margin-bottom: 15px;"></div>
-
-                    <!-- Domicilio autocompletado -->
-                    <input type="text" id="direccion" placeholder="Dirección detectada" required class="sombra-input" readonly>
 
                     <div class="form-row-2col">
                         <input type="text" id="datos_adicionales" placeholder="Datos adicionales" class="sombra-input">
@@ -107,7 +109,8 @@
         const provSelect = document.getElementById("provincia");
         const deptoSelect = document.getElementById("departamento");
         const locSelect = document.getElementById("localidad");
-        const direccionInput = document.getElementById("direccion");
+        const calleInput = document.getElementById("calle");
+        const alturaInput = document.getElementById("altura");
 
         const latInput = document.getElementById("lat");
         const lngInput = document.getElementById("lng");
@@ -189,9 +192,8 @@
 
         let marker = null;
 
-        // =======================
         // 5) Centrar mapa en Localidad
-        // =======================
+
         locSelect.addEventListener("change", async () => {
             const prov = encodeURIComponent(provSelect.value);
             const depto = encodeURIComponent(deptoSelect.value);
@@ -209,36 +211,64 @@
             }
 
             map.setView([data.lat, data.lng], 15);
-
-            // Si también querés mostrar domicilio automáticamente
-            if (data.domicilio) {
-                direccionInput.value = data.domicilio;
-            }
         });
 
-        // =======================
-        // 6) Click en mapa → obtener reverse
-        // =======================
-        map.on("click", async function (e) {
+        // 6) Buscar dirección
+        async function actualizarDesdeTexto() {
+            const prov = encodeURIComponent(provSelect.value);
+            const depto = encodeURIComponent(deptoSelect.value);
+            const loc = encodeURIComponent(locSelect.value);
+
+            const calleRaw = calleInput.value.trim();
+            const alturaRaw = alturaInput.value.trim();
+
+            if (!calleRaw || !alturaRaw) return;
+
+            const calle = encodeURIComponent(calleRaw);
+            const altura = encodeURIComponent(alturaRaw);
+
+            if (!calle || !altura || !prov || !depto || !loc) return;
+
+            const resp = await fetch(
+                `${BACKEND_URL}/georef/coordenadas?provincia=${prov}&municipio=${depto}&localidad=${loc}&calle=${calle}&altura=${altura}`
+            );
+            const data = await resp.json();
+
+            console.log("Resultado de geolocalización:", data);
+
+            if (!data || !data.lat || !data.lng) {
+                console.error("Coordenadas no encontradas", data);
+                return;
+            }
+
+            // --- Actualizar mapa ---
+            map.setView([data.lat, data.lng], 15);
+
+            if (!marker) {
+                marker = L.marker([data.lat, data.lng]).addTo(map);
+            } else {
+                marker.setLatLng([data.lat, data.lng]);
+            }
+
+            // Actualizar calle devuelta
+            if (data.calle) {
+                calleInput.value = data.calle;
+            }
+        }
+
+        calleInput.addEventListener("input", actualizarDesdeTexto);
+        alturaInput.addEventListener("input", actualizarDesdeTexto);
+
+        // 7) Click en el mapa → SOLO cambia lat/lng
+        map.on("click", async e => {
             const lat = e.latlng.lat;
             const lng = e.latlng.lng;
 
             latInput.value = lat;
             lngInput.value = lng;
 
-            if (!marker) {
-                marker = L.marker([lat, lng]).addTo(map);
-            } else {
-                marker.setLatLng([lat, lng]);
-            }
-
-            // Reverse geocoding
-            const resp = await fetch(`${BACKEND_URL}/georef/reverse?lat=${lat}&lng=${lng}`);
-            const data = await resp.json();
-
-            if (data && data.domicilio) {
-                direccionInput.value = data.domicilio;
-            }
+            if (!marker) marker = L.marker([lat, lng]).addTo(map);
+            else marker.setLatLng([lat, lng]);
         });
     </script>
 

@@ -8,12 +8,18 @@ async function registrarUsuario(event) {
     const apellido = document.getElementById("apellido").value.trim();
     const dni = parseInt(document.getElementById("dni").value.trim());
     const email = document.getElementById("email").value.trim();
-    const domicilio = document.getElementById("direccion").value.trim();
+    const provincia = document.getElementById("provincia").value.trim();
+    const departamento = document.getElementById("departamento").value.trim();
+    const localidad = document.getElementById("localidad").value.trim();
+    const calle = document.getElementById("calle").value.trim();
+    const altura = document.getElementById("altura").value.trim();
     const lat = parseFloat(document.getElementById("lat").value);
     const lng = parseFloat(document.getElementById("lng").value);
     const aclaracion = document.getElementById("datos_adicionales").value.trim();
     const telefono = document.getElementById("telefono").value.trim();
     const password = document.getElementById("clave").value.trim();
+
+    const domicilio = `${calle} ${altura}, ${localidad}, ${departamento}, ${provincia}`
 
     // 2) POR AHORA dirección sin geolocalización real
     // Cuando agregues el mapa, reemplazamos esto por lat/lng reales.
