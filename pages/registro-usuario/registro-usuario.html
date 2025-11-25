@@ -218,48 +218,41 @@
             const prov = encodeURIComponent(provSelect.value);
             const depto = encodeURIComponent(deptoSelect.value);
             const loc = encodeURIComponent(locSelect.value);
+            const calle = encodeURIComponent(calleInput.value.trim());
+            const altura = encodeURIComponent(alturaInput.value.trim());
 
-            const calleRaw = calleInput.value.trim();
-            const alturaRaw = alturaInput.value.trim();
+            if (prov && depto && loc && calle && altura) {
 
-            // Verificar que el usuario ya escribió calle y altura
-            if (!calleRaw || !alturaRaw) return;
+                const resp = await fetch(
+                    `${BACKEND_URL}/georef/coordenadas?provincia=${prov}&municipio=${depto}&localidad=${loc}&calle=${calle}&altura=${altura}`
+                );
+                const data = await resp.json();
 
-            // Verificar que ya seleccionó provincia/departamento/localidad
-            if (!provSelect.value || !deptoSelect.value || !locSelect.value) return;
+                console.log("Resultado de geolocalización:", data);
 
-            const calle = encodeURIComponent(calleRaw);
-            const altura = encodeURIComponent(alturaRaw);
+                if (!data || !data.lat || !data.lng) {
+                    console.error("Coordenadas no encontradas", data);
+                    return;
+                }
 
-            const resp = await fetch(
-                `${BACKEND_URL}/georef/coordenadas?provincia=${prov}&municipio=${depto}&localidad=${loc}&calle=${calle}&altura=${altura}`
-            );
-            const data = await resp.json();
+                // --- Actualizar mapa ---
+                map.setView([data.lat, data.lng], 15);
 
-            console.log("Resultado de geolocalización:", data);
+                if (!marker) {
+                    marker = L.marker([data.lat, data.lng]).addTo(map);
+                } else {
+                    marker.setLatLng([data.lat, data.lng]);
+                }
 
-            if (!data || !data.lat || !data.lng) {
-                console.error("Coordenadas no encontradas", data);
-                return;
-            }
-
-            // --- Actualizar mapa ---
-            map.setView([data.lat, data.lng], 15);
-
-            if (!marker) {
-                marker = L.marker([data.lat, data.lng]).addTo(map);
-            } else {
-                marker.setLatLng([data.lat, data.lng]);
-            }
-
-            // Actualizar calle devuelta
-            if (data.calle) {
-                calleInput.value = data.calle;
+                // Actualizar calle devuelta
+                if (data.calle) {
+                    calleInput.value = data.calle;
+                }
             }
         }
 
-        calleInput.addEventListener("input", actualizarDesdeTexto);
-        alturaInput.addEventListener("input", actualizarDesdeTexto);
+        calleInput.addEventListener("change", actualizarDesdeTexto);
+        alturaInput.addEventListener("change", actualizarDesdeTexto);
 
         // 7) Click en el mapa → SOLO cambia lat/lng
         map.on("click", async e => {
