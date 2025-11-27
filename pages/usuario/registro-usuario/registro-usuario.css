@@ -588,26 +588,3 @@ h2 {
         padding: 9px 14px;
     }
 }
-
-/* ----------- YA TIENES CUENTA (LINK ABAJO DEL FORM) ----------- */
-
-#ya-tienes-cuenta {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 15px;
-    font-weight: 500;
-    color: #333;
-}
-
-#ya-tienes-cuenta button {
-    margin-left: 8px;
-    background: transparent;
-    border: none;
-    color: #AC0505;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-#ya-tienes-cuenta button:hover {
-    text-decoration: underline;
-}
