@@ -1,58 +1,98 @@
-import {BACKEND_URL} from "../config.js";
+import { BACKEND_URL } from "../config.js";
 
-// Esperamos a que TODO el HTML esté cargado
-// así podemos buscar elementos dentro del DOM.
+/* ============================================================
+   =============== EFECTO TYPEWRITER DEL TÍTULO ================
+=============================================================== */
+
+(function () {
+    const span = document.querySelector('#titulo span');
+    if (!span) return;
+
+    const originalText = span.textContent.trim();
+
+    function typeText(el, text, delay = 100) {
+        el.textContent = '';
+        let i = 0;
+        const timer = setInterval(() => {
+            el.textContent += text.charAt(i);
+            i++;
+            if (i >= text.length) clearInterval(timer);
+        }, delay);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            typeText(span, originalText, 120);
+        }, 250);
+    });
+})();
+
+/* ============================================================
+   ================= NAVIGACIÓN DEL LOGIN ======================
+=============================================================== */
+
+export function olvidoClave(event) {
+    event.preventDefault();
+    window.location.href = './pages/usuario/restablecer-password/forgot-password.html';
+}
+
+export function crearCuenta() {
+    window.location.href = './pages/usuario/registro-usuario/registro-usuario.html';
+}
+
+export function entrarConGoogle() {
+    console.log("Entrar con Google");
+}
+
+/* ============================================================
+   ===================== LOGIN REAL ============================
+=============================================================== */
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Obtenemos el formulario completo por su id
     const form = document.querySelector("#form-login");
 
-    // Capturamos CUANDO EL USUARIO HACE SUBMIT
-    // (click en el botón o enter en los inputs)
-    form.addEventListener("submit", async (e) => {
+    if (!form) {
+        console.error("No se encontró el formulario #form-login");
+        return;
+    }
 
-        // Evita que el formulario recargue la página automáticamente
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        // Leemos los valores del email y la contraseña
         const email = document.querySelector("#email").value;
         const password = document.querySelector("#password").value;
+        const botonLogin = document.getElementById("btn-login");
+
+        // feedback visual
+        botonLogin.textContent = "Iniciando...";
+        botonLogin.disabled = true;
 
         try {
-
-            // Hacemos un POST al endpoint de LOGIN del backend
             const resp = await fetch(`${BACKEND_URL}/users/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                
-                // MUY IMPORTANTE:
-                // Habilita que el backend pueda enviar una cookie HttpOnly
                 credentials: "include",
-
-                // Enviamos email y password como JSON
                 body: JSON.stringify({ email, password })
             });
 
-            // Si la respuesta NO es 200 → error de login
             if (!resp.ok) {
                 const data = await resp.json();
                 alert(data.detail || "Credenciales incorrectas");
+
+                // restaurar botón
+                botonLogin.textContent = "Iniciar Sesión";
+                botonLogin.disabled = false;
                 return;
             }
 
-            // SI TODO SALIÓ BIEN →
-            // el backend envió la cookie con el token
-            // entonces redirigimos al home en la nube
-            window.location.href = "/home-usuario/home-usuario.html";
+            // login OK → redirigir
+            window.location.href = "./pages/usuario/home-usuario/home-usuario.html";
 
         } catch (err) {
-
-            // Si hubo fallo de red o no se pudo conectar
             console.error(err);
             alert("Error de conexión con el servidor");
         }
     });
 
 });
-
-// en el html <script type="module" src="js/index.js"></script>

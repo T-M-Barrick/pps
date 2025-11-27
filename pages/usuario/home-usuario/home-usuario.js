@@ -17,7 +17,7 @@ async function cargarDatosDesdeBackend() {
 
         if (!respuesta.ok) {
             console.error("No se pudo obtener los datos del usuario.");
-            window.location.href = "/index.html";
+            window.location.href = "../../index.html";
             return;
         }
 
@@ -52,7 +52,7 @@ async function cargarDatosDesdeBackend() {
 
     } catch (error) {
         console.error("Error al obtener datos:", error);
-        window.location.href = "/index.html";
+        window.location.href = "../../index.html";
     }
 }
 

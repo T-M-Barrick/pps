@@ -1,0 +1,1240 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ======== PÁGINA PRINCIPAL / LOGIN ======== */
+body {
+    background: #f2f4f5;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER / LOGO */
+header {
+    width: 100%;
+    padding-top: 60px;
+    /* Verificar la prox para que todas figuren igual que el index*/
+    display: flex;
+    justify-content: center;
+}
+
+header img {
+    width: 400px;
+    height: auto;
+    max-width: 90%;
+
+
+}
+
+/* TITULO PRINCIPAL */
+main h2 {
+    max-width: 600px;
+    width: 90%;
+    margin: 50px auto 30px auto;
+
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-align: center;
+    color: #333;
+
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.resaltado {
+    font-weight: 800;
+    font-style: italic;
+    color: #b71c1c;
+}
+
+/* BOTONES */
+.botones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    width: 100%;
+}
+
+.btn {
+    width: 384.45px;
+    height: 99px;
+    line-height: 99px;
+    text-align: center;
+
+    background: #b71c1c;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+
+    border: none;
+    border-radius: 15px;
+    text-decoration: none;
+    cursor: pointer;
+
+    box-shadow: 5px 5px 7px rgba(0, 0, 0, 0.25);
+
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+/* DESCRIPCIÓN */
+.descripcion {
+    max-width: 992px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    font-size: 20px;
+    background: transparent;
+    opacity: 1;
+    color: #333;
+    line-height: 1.6;
+    text-align: justify;
+    border-radius: 10px;
+}
+
+.footer {
+    width: 100%;
+    margin-top: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: #333;
+    background-color: #f2f4f5;
+}
+
+.footer-top {
+    margin-bottom: 10px;
+}
+
+.footer-top .social-icons a {
+    margin: 0 8px;
+    color: #000;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.footer-top p {
+    margin: 8px 0;
+    font-weight: 500;
+}
+
+.footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 12px;
+    color: #444;
+}
+
+.footer-bottom span {
+    margin: 5px 6px;
+    display: inline-block;
+}
+
+.footer-bottom i {
+    margin-right: 5px;
+}
+*
+
+/* Contenedor principal */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Ícono de inicio */
+.home-icon-link {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+}
+
+.home-icon {
+    width: 96px;
+    height: 96px;
+}
+
+/* Logo */
+.logo {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 25px;
+}
+
+/* Formulario */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+/* email y contraseña */
+.input-group {
+    width: 100%;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+/* Agregado */
+input[type="tel"],
+/* Agregado */
+input[type="url"],
+/* Agregado */
+input[type="file"] {
+    width: 100%;
+    height: 75px;
+    padding: 0 20px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Placeholder */
+input::placeholder {
+    color: #C5C5C5;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+}
+
+/* Botón "Iniciar Sesión" */
+.submit-btn {
+    width: 100%;
+    height: 70px;
+    margin-top: 5px;
+    background-color: #ac0505;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #920404;
+}
+
+/* Enlaces de texto */
+.forgot-password,
+.no-account {
+    color: #ac0505;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.no-account {
+    margin-top: 10px;
+}
+
+/* Botón "Entrar con Google" */
+.google-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 53.76px;
+    background-color: #ecf0f1;
+    border: 3px solid #C3C3C3;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    color: #ac0505;
+}
+
+.google-login-btn span {
+    color: #ac0505;
+    margin-right: 5px;
+}
+
+.google-login-btn img {
+    width: 30px;
+    height: 45px;
+    vertical-align: middle;
+
+
+}
+
+/* Botón "Crear una cuenta" */
+.create-account-btn {
+    display: block;
+    width: 100%;
+    height: 65px;
+    line-height: 65px;
+    background-color: transparent;
+    color: #ac0505;
+    border: 2px solid #ac0505;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.create-account-btn:hover {
+    background-color: #ac0505;
+    color: #fff;
+}
+
+.logo-upload-group {
+    width: 100%;
+    max-width: 350px;
+    margin-bottom: 15px;
+}
+
+/*botón de carga de logo */
+.logo-upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px 20px;
+    background-color: #fff;
+    border: 3px solid #C3C3C3;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.3s;
+}
+
+.logo-upload-btn:hover {
+    background-color: #f5f5f5;
+}
+
+.logo-upload-btn img {
+    width: 24px;
+    height: auto;
+    margin-right: 10px;
+}
+
+#logoFileName {
+    font-size: 0.8rem;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+/* ======== ESTILOS DE NAVEGACIÓN (NAV) ======== */
+
+/* NAV Principal */
+.main-nav {
+    width: 100%;
+    background-color: #AC0505;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Botón del Menú Desplegable  */
+.menu-toggle-btn {
+    background-color: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px 10px;
+    transition: background-color 0.2s ease;
+    border-radius: 5px;
+
+}
+
+/* ======== ESTILOS DEL MENÚ GENERAL DE USUARIO ======== */
+.user-dropdown-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    /* Animación de entrada/salida */
+
+    /* Estilos Visuales */
+    background-color: #7D0000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow-y: auto;
+    padding-top: 60px;
+    text-align: left;
+}
+
+/* Estado Activo de JS */
+.user-dropdown-content.show-user-menu {
+    transform: translateX(0);
+}
+
+/* Estilos de los enlaces */
+.user-dropdown-content a {
+    padding: 15px 20px;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    background-color: transparent;
+    font-weight: 500;
+    color: white;
+}
+
+.user-dropdown-content a:hover {
+    background-color: #AC0505;
+    color: white;
+}
+
+/* Estilo para el campo de búsqueda "busca un servicio o empresa" */
+.nav-search-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 20px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    outline: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+/* Contenedor del Logo en el NAV */
+.nav-logo-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-logo-container img {
+    height: 60px;
+    width: auto;
+}
+
+/* placeholder */
+.nav-search-input::placeholder {
+    color: #C5C5C5;
+    /* Color solicitado */
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* Contenedor del buscador */
+.search-container {
+    flex-grow: 1;
+    max-width: 500px;
+    margin: 0 20px;
+}
+
+/* ======== ESTILOS DE HOME (Contenido principal) ======== */
+
+.home-title {
+    margin: 40px auto 10px auto;
+    font-size: 32px;
+    font-weight: 500;
+    color: #333;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    justify-content: center;
+    gap: 20px 10px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 60px auto;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    order: 0;
+}
+
+.category-item span {
+    order: 1;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.category-icon {
+    order: 2;
+    width: 150px;
+    height: 150px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.category-icon:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+.category-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.category-icon i {
+    display: none;
+}
+
+/* ======== ESTILOS DEL MENÚ DESPLEGABLE DE PERFIL USUARIO Y EMPRESA ======== */
+
+.dropdown-menu-container {
+    position: relative;
+    display: inline-block;
+    background: #7D0000;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.profile-dropdown-btn {
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 5px;
+
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    border: 1px solid #941616;
+    background-color: #AC0505;
+    min-width: 200px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 101;
+    border-radius: 5px;
+    overflow: hidden;
+    text-align: left;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+}
+
+.dropdown-content a:hover {
+    background-color: #7D0000;
+}
+
+.dropdown-content .logout-link {
+    font-weight: 600;
+}
+
+.show {
+    display: block;
+}
+
+
+/* Sección de Características */
+.features-section {
+    width: 100%;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.features-section h3 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.features-section p {
+    font-size: 18px;
+    color: #b71c1c;
+    font-weight: 500;
+    margin-bottom: 50px;
+}
+
+/* Contenedor de Tarjetas de Características */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background: #fff;
+}
+
+.feature-card i {
+    font-size: 40px;
+    color: #ac0505;
+    margin-bottom: 10px;
+}
+
+.feature-card h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.feature-card p {
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+}
+
+/* ESTILOS ESPECÍFICOS PARA PERFIL DE EMPRESA  */
+
+.perfil-main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px 80px 20px;
+}
+
+.perfil-container {
+    width: 100%;
+    max-width: 800px;
+    background: #D9D9D9;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.perfil-titulo {
+    font-size: 30px;
+    color: #333;
+    margin-bottom: 5px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.perfil-subtitulo {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 30px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+/* --- FOTO DE PERFIL --- */
+.foto-perfil-section {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    padding: 15px 0;
+}
+
+.foto-circulo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: #f2f4f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 3px solid #b71c1c;
+}
+
+.foto-circulo i.fa-camera {
+    font-size: 40px;
+    color: #aaa;
+}
+
+.foto-circulo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+    /* Inicialmente oculto */
+}
+
+.foto-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.formato-info {
+    font-size: 15px;
+    color: #999;
+    margin-top: 10px;
+}
+
+/* --- FORMULARIO --- */
+.perfil-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.campo-grupo label {
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+.campo-contenedor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding-right: 10px;
+}
+
+.campo-contenedor input {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: #333;
+}
+
+.campo-contenedor input:disabled {
+    color: #666;
+    background: #f9f9f9;
+    cursor: default;
+}
+
+.campo-contenedor input:not(:disabled) {
+    background: #fff;
+    border: 1px solid #b71c1c;
+    border-radius: 8px;
+}
+
+.btn-editar {
+    background: none;
+    border: none;
+    color: #b71c1c;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.btn-editar:hover {
+    color: #8c1414;
+}
+
+.btn-actualizar-perfil {
+    align-self: flex-start;
+    margin-top: 20px;
+    width: 200px;
+}
+
+/* Pie de página */
+.footer {
+    width: 100%;
+    margin-top: auto;
+    text-align: center;
+    font-size: 13px;
+    color: #333;
+}
+
+.footer-top {
+    margin-bottom: 10px;
+}
+
+.footer-top .social-icons a {
+    margin: 0 8px;
+    color: #000;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.footer-top p {
+    margin: 8px 0;
+    font-weight: 500;
+}
+
+.footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 12px;
+    color: #444;
+}
+
+.footer-bottom span {
+    margin: 5px 6px;
+    display: inline-block;
+}
+
+.footer-bottom i {
+    margin-right: 5px;
+}
+
+/* Media Query */
+@media (min-width: 769px) {
+    .logo {
+        width: 383px;
+        height: 138px;
+        max-width: none;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .input-group,
+    .submit-btn,
+    .create-account-btn {
+        width: 360px;
+        max-width: none;
+    }
+
+    .google-login-btn {
+        width: 195px;
+        max-width: none;
+    }
+}
+
+@media (min-width: 1025px) {
+    * {
+        font-size: revert-layer; 
+    }
+}
+
+/* Media Query para móviles*/
+@media (max-width: 768px) {
+    .home-icon-link {
+        top: 20px;
+        left: 15px;
+    }
+
+    .home-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .logo {
+        width: 180px;
+        margin-top: 60px;
+    }
+
+    .botones {
+        flex-direction: column;
+        gap: 15px;
+        width: 90%;
+        margin: 20px auto;
+    }
+
+    .btn {
+        width: 100%;
+        min-width: 0;
+        height: 100px;
+        line-height: 60px;
+        max-width: 300px;
+    }
+
+    main h2 {
+        font-size: 24px;
+        margin: 30px auto 20px auto;
+    }
+
+    header img {
+        width: 200px;
+    }
+
+    .main-nav {
+        flex-wrap: wrap;
+        padding: 10px;
+        /* Ajuste para móvil */
+    }
+
+    /* 4. Descripción */
+    .descripcion {
+        width: 90%;
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .descripcion p {
+        font-size: 14px;
+        text-align: left;
+    }
+
+
+    .nav-logo-container {
+        position: static;
+        transform: none;
+        order: 1;
+        flex-grow: 1;
+        text-align: center;
+    }
+
+    .menu-toggle-btn:first-child {
+        order: 0;
+    }
+
+    .nav-icons {
+        order: 2;
+    }
+
+    /* BUSCADOR debajo del título en móvil */
+    .search-container {
+        order: 3;
+        width: 90%;
+        max-width: 100%;
+        margin-top: 15px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    /* CATEGORÍAS*/
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px 5px;
+        max-width: 100%;
+        width: 90%;
+        margin: 0 auto 40px auto;
+    }
+
+    .category-span {
+        font-size: 11px;
+    }
+
+    .category-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+    }
+
+
+    /* FEATURES SECCION */
+    .features-section {
+        padding: 30px 10px;
+    }
+
+    .features-section h3 {
+        font-size: 22px;
+    }
+
+    .features-section p {
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .cards-container {
+        /* 2 columnas */
+        gap: 15px;
+    }
+
+    .feature-card {
+        /* 100% en móvil*/
+        width: 90%;
+        max-width: 350px;
+        margin: 0 auto;
+        padding: 15px;
+    }
+
+    .feature-card i {
+        font-size: 30px;
+    }
+
+    .feature-card h4 {
+        font-size: 16px;
+    }
+
+    .feature-card p {
+        font-size: 12px;
+    }
+
+    /* PERFIL DE EMPRESA */
+    .perfil-container {
+        padding: 20px;
+    }
+
+    .foto-perfil-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .btn-actualizar-perfil {
+        width: 100%;
+    }
+
+    .foto-actions {
+        align-items: center;
+    }
+
+    .perfil-titulo,
+    .perfil-subtitulo {
+        text-align: center;
+    }
+}
+
+
+/* ======== ESTILOS ESPECÍFICOS PARA TARJETAS DE TURNO ======== */
+
+.turnos-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 50px auto;
+    display: grid;
+    /* 2 columnas en desktop, se apilan en mobile */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 20px;
+}
+
+.turno-card {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.turno-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.turno-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.turno-info h4 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.turno-info p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.turno-datetime {
+    text-align: right;
+    font-weight: 600;
+    color: #ac0505;
+}
+
+.turno-datetime .time {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.turno-datetime .date {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+}
+
+.turno-footer {
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.turno-direccion {
+    font-size: 14px;
+    color: #ac0505;
+    font-weight: 500;
+    text-decoration: none;
+    transition: text-decoration 0.2s;
+}
+
+.turno-direccion:hover {
+    text-decoration: underline;
+}
+
+/* ESTADOS DE TURNO */
+.turno-estado {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.estado-confirmado {
+    background-color: #4CAF50; 
+}
+
+.estado-cancelado {
+    background-color: #F44336; 
+}
+
+.estado-cumplido {
+    background-color: #2196F3; 
+}
+
+.estado-no-cumplido {
+    background-color: #FF9800; 
+}
+
+.estado-vencido {
+    background-color: #9E9E9E; 
+}
+
+/* Filtros de botones */
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background-color: #fff;
+    color: #ac0505;
+    border: 1px solid #ac0505;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background-color: #ac0505;
+    color: #fff;
+}
+
+/* Responsive para la vista de turnos */
+@media (max-width: 600px) {
+    .turnos-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 0 10px;
+    }
+    .turno-card {
+        padding: 15px;
+    }
+    .turno-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .turno-datetime {
+        text-align: left;
+        margin-top: 10px;
+    }
+    .turno-datetime .time {
+        font-size: 20px;
+    }
+    .turno-info h4 {
+        font-size: 18px;
+    }
+    .filter-buttons {
+        padding: 0 10px;
+    }
+    .filter-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}

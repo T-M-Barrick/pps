@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - MiTurno</title>
-    <link rel="stylesheet" href="../../css/style-global.css">
+    <link rel="stylesheet" href="./home-usuario.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="favicon" href="../../favicon.ico">
+</head>
 
 <body>
 
@@ -21,15 +22,15 @@
             </button>
 
             <div class="user-dropdown-content">
-                <a href="./mis-turnos.html">Mis Turnos</a>
-                <a href="./home-usuario.html">Categorías</a>
+                <a href="./home-turnos.html">Mis Turnos</a>
+                <a href="./home-usuario2.html">Categorías</a>
                 <a href="#">Contacto</a>
                 <a href="#">Configuración</a>
             </div>
         </div>
 
         <div class="nav-logo-container">
-            <a href="../index.html">
+            <a href="../../index.html">
                 <img src="../../img/logo-miturno2.png" alt="Mi Turno Logo">
             </a>
         </div>
@@ -60,9 +61,8 @@
     <main>
         <h2 class="home-title" style="margin-bottom: 20px;">Qué servicio necesitas hoy?</h2>
 
-        <div class="search-container" style="max-width: 400px; margin: 0 auto 40px auto; flex-grow: 0;">
-            <input type="text" placeholder="Busca un servicio o empresa..." class="nav-search-input"
-                style="height: 45px;">
+        <div class="search-container">
+            <input type="text" placeholder="Busca un servicio o empresa..." class="nav-search-input">
         </div>
 
         <section class="categories-grid">
@@ -138,7 +138,7 @@
             </a>
         </section>
 
-        <section class="features-section">
+        <!-- <section class="features-section">
             <h3>Todo lo que necesitás para gestionar tus turnos</h3>
             <p>Reservá, organizá y llevá el control de tus turnos de manera sencilla desde cualquier dispositivo.</p>
 
@@ -179,8 +179,8 @@
                         en segundos para resolverlo al instante.</p>
                 </div>
             </div>
-        </section>
-    </main>
+        </section>-->
+    </main> 
 
     <footer class="footer">
         <div class="footer-top">
@@ -200,11 +200,9 @@
                 <span><i class="fas fa-users"></i> Sobre nosotros</span>
             </p>
         </div>
-    </footer>
-    <script src="../../js/main.js"></script>
-    <script src="./home.js"></script>
-    <script type="module" src="./home-usuario.js"></script>
 
+    </footer>
+<script src="./home-dropdown.js"></script>
 </body>
 
 </html>
