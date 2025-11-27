@@ -274,7 +274,7 @@ h2 {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 6px 8px rgba(0,0,0,0.15);
-}
+}/*"height: 250px; border-radius: 8px; margin-bottom: 15px;"*/
 
 #texto-coordenadas {
     text-align: center;

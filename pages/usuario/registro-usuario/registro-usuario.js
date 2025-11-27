@@ -80,8 +80,7 @@ btnSiguiente.addEventListener("click", () => {
 
     seccionUsuario.classList.remove("activa");
     seccionDomicilio.classList.add("activa");
-
-    iniciarMapa();
+    
     scrollTo({ top: 0, behavior: "smooth" });
 });
 
