@@ -82,8 +82,8 @@
     gap: 1rem;
 }
 
-#correo,
-#clave {
+#email,
+#password {
     background: var(--gris-input);
     border: none;
     padding: 1rem;

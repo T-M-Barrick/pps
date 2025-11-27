@@ -96,3 +96,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+/* ============================================================
+   ========== EVENTOS PARA BOTONES DEL INDEX ===================
+=============================================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const btnCrear = document.querySelector("#btn-crear");
+    const btnGoogle = document.querySelector("#btn-google");
+    const linkOlvide = document.querySelector("#olvide");
+
+    if (btnCrear) btnCrear.addEventListener("click", crearCuenta);
+
+    if (btnGoogle) btnGoogle.addEventListener("click", entrarConGoogle);
+
+    if (linkOlvide) {
+        linkOlvide.addEventListener("click", (e) => {
+            e.preventDefault();
+            olvidoClave(e);
+        });
+    }
+
+});
