@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "../../../js/config.js";
+import { BACKEND_URL } from "../../../config.js";
 
 // === Estilos del modal ===
 const estiloModal = document.createElement('style');
