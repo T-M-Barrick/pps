@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "../../../config.js";
+import { BACKEND_URL, manejarErrorRespuesta } from "../../../config.js";
 
 // === Estilos del modal ===
 const estiloModal = document.createElement('style');
@@ -52,7 +52,6 @@ estiloModal.innerHTML = `
 `;
 document.head.appendChild(estiloModal);
 
-
 // =========================
 //       MANEJAR FORM
 // =========================
@@ -68,26 +67,20 @@ async function restablecerClave(event) {
     }
 
     try {
-        const resp = await fetch(`${BACKEND_URL}/users/forgot_password`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email })
-        });
-
-        // NO importa si existe o no el email → Backend siempre responde 200.
-        if (!resp.ok) {
-            mostrarModalError("Hubo un problema al enviar el correo.");
-            return;
-        }
-
-        const data = await resp.json();
+        const data = await manejarErrorRespuesta(
+            await fetch(`${BACKEND_URL}/users/forgot_password_email`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            }),
+            "Hubo un problema al enviar el correo"
+        );
 
         mostrarModalExito(data.message);
-
         emailInput.value = "";
 
-    } catch (error) {
-        mostrarModalError("Error de conexión con el servidor.");
+    } catch (err) {
+        mostrarModalError(err.message || "Error de conexión con el servidor");
     }
 }
 

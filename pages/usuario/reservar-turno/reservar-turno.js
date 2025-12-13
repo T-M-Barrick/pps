@@ -1,3 +1,5 @@
+import { BACKEND_URL, manejarErrorRespuesta } from "../../../config.js";
+
 /* ============================================================
    DATA DE PRUEBA
 ============================================================ */
@@ -350,3 +352,16 @@ document.addEventListener("DOMContentLoaded", () => {
     renderizarServicios();
     mostrarPaso(1);
 });
+
+async function cargarTurnosDisponibles(empresaId) {
+    try {
+        const response = await fetch(`/empresas/${empresaId}/turnos_disponibles`);
+        if (!response.ok) throw new Error("No hay turnos disponibles");
+        const servicios = await response.json();
+
+        console.log("Turnos disponibles:", servicios);
+
+    } catch (error) {
+        console.error(error);
+    }
+}

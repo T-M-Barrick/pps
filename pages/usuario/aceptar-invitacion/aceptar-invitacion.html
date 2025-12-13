@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Aceptar Invitación</title>
+    <style>
+        /* Modal básico */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay.mostrar { display: flex; }
+        .modal-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        #modal-btn {
+            margin-top: 1.5rem;
+            background: #AC0505;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #modal-btn:hover { background: #8c0404; }
+    </style>
+</head>
+<body>
+
+<div id="modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+        <div id="modal-mensaje"></div>
+        <button id="modal-btn">Aceptar</button>
+    </div>
+</div>
+
+<script type="module" src="./aceptar-invitacion.js"></script>
+</body>
+</html>

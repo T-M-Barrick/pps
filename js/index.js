@@ -48,7 +48,22 @@ export function entrarConGoogle() {
    ===================== LOGIN REAL ============================
 =============================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+    // Verificar sesión activa
+    try {
+        const resp = await fetch(`${BACKEND_URL}/users/me`, {
+            method: "GET",
+            credentials: "include"
+        });
+
+        if (resp.ok) {
+            window.location.href = "./pages/usuario/home-usuario/home-usuario.html";
+            return; // si hay sesión, no inicializamos login
+        }
+    } catch {
+        console.log("Usuario no logueado, mostrar login");
+    }
 
     const form = document.querySelector("#form-login");
 
@@ -94,14 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Error de conexión con el servidor");
         }
     });
-
-});
-
-/* ============================================================
-   ========== EVENTOS PARA BOTONES DEL INDEX ===================
-=============================================================== */
-
-document.addEventListener("DOMContentLoaded", () => {
 
     const btnCrear = document.querySelector("#btn-crear");
     const btnGoogle = document.querySelector("#btn-google");

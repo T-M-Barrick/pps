@@ -554,23 +554,19 @@ function actualizarDatosTurno(turnoApi) {
 
 async function actualizarEstadoTurno(id, nuevoEstado) {
     try {
-        const resp = await fetch(`${BACKEND_URL}/users/turnos`, {
-            method: "PUT",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                id: id,
-                estado_turno: nuevoEstado,
-                recordatorio: null
-            })
-        });
-
-        // ⛔ SI EL BACK DEVUELVE ERROR
-        await manejarErrorRespuesta(resp, "Error al actualizar turno");
-
-        const turnoActualizado = await resp.json();
+        const turnoActualizado = await manejarErrorRespuesta(
+            await fetch(`${BACKEND_URL}/users/turnos`, {
+                method: "PUT",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: id,
+                    estado_turno: nuevoEstado,
+                    recordatorio: null
+                })
+            }),
+            "Error al actualizar turno"
+        );
 
         // Guardar EXACTO en sessionStorage
         reemplazarTurnoEnSession(turnoActualizado);
@@ -632,15 +628,13 @@ function actualizarEstadosEnSession(estados) {
 // ========================================
 async function eliminarTurno(id) {
     try {
-        const resp = await fetch(`${BACKEND_URL}/users/turnos/${id}`, {
-            method: "DELETE",
-            credentials: "include"
-        });
-
-        // ⛔ SI EL BACK DEVUELVE ERROR
-        await manejarErrorRespuesta(resp, "Error al eliminar turno");
-
-        const data = await resp.json();
+        const data = await manejarErrorRespuesta(
+            await fetch(`${BACKEND_URL}/users/turnos/${id}`, {
+                method: "DELETE",
+                credentials: "include"
+            }),
+            "Error al eliminar turno"
+        );
 
         const idEliminado = data.turno_id;
 
@@ -699,20 +693,19 @@ async function enviarCalificacion() {
 
     try {
         // 1️⃣ Enviar calificación al backend
-        const resp = await fetch(`${BACKEND_URL}/calificacion`, {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                empresa_id: turno.empresa_id,
-                valor: calificacionSeleccionada
-            })
-        });
-        
-        // ⛔ SI EL BACK DEVUELVE ERROR
-        await manejarErrorRespuesta(resp, "No se pudo guardar la calificación");
+        const data = await manejarErrorRespuesta(
+            await fetch(`${BACKEND_URL}/calificacion`, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    empresa_id: turno.empresa_id,
+                    valor: calificacionSeleccionada
+                })
+            }),
+            "Error al enviar calificación"
+        );
 
-        const data = await resp.json();
         console.log("Respuesta del backend:", data);
 
         // 2️⃣ Si el backend confirmó, recién ahora marcás el turno como cumplido
@@ -799,23 +792,21 @@ async function guardarRecordatorioNuevo() {
     if (!turno) return;
 
     try {
-        const resp = await fetch(`${BACKEND_URL}/users/turnos`, {
-            method: "PUT",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                id: turnoRecordatorioSeleccionado,
-                estado_turno: null,
-                recordatorio: horas * 60 + minutos
-            })
-        });
-
-        // ⛔ SI EL BACK DEVUELVE ERROR
-        await manejarErrorRespuesta(resp, "Error al actualizar recordatorio");
-
-        const turnoActualizado = await resp.json();
+        const turnoActualizado = await manejarErrorRespuesta(
+                await fetch(`${BACKEND_URL}/users/turnos`, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: turnoRecordatorioSeleccionado,
+                    estado_turno: null,
+                    recordatorio: horas * 60 + minutos
+                })
+            }),
+            "Error al actualizar recordatorio"
+        );
 
         // Guardar EXACTO en sessionStorage
         reemplazarTurnoEnSession(turnoActualizado);

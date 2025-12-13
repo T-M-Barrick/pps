@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "../../../config.js";
+import { BACKEND_URL, manejarErrorRespuesta } from "../../../config.js";
 
 // ===================== ESTILOS DEL MODAL =====================
 const estiloModal = document.createElement('style');
@@ -61,6 +61,12 @@ async function resetearClave(event) {
     const nuevaClave = document.getElementById('nueva-clave').value;
     const confirmacionClave = document.getElementById('confirmacion-clave').value;
 
+    if (!nuevaClave || !confirmacionClave) {
+        mostrarModal("❌ Debes completar todos los campos.", "Aceptar");
+        return;
+    }
+
+
     // Validaciones front
     if (nuevaClave.length < 6) {
         mostrarModal("❌ Error:<br>La contraseña debe tener al menos 6 caracteres.", "Aceptar");
@@ -83,23 +89,19 @@ async function resetearClave(event) {
 
     // === ENVIAR AL BACKEND ===
     try {
-        const resp = await fetch(`${BACKEND_URL}/users/forgot_password`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                token: token,
-                new_password: nuevaClave
-            })
-        });
-
-        const data = await resp.json();
-
-        if (!resp.ok) {
-            mostrarModal("❌ Error:<br>" + (data.detail || "No se pudo restablecer la contraseña."), "Aceptar");
-            return;
-        }
+        const resp = await manejarErrorRespuesta(
+            await fetch(`${BACKEND_URL}/users/reset_password_email`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    token: token,
+                    new_password: nuevaClave
+                })
+            }),
+            "No se pudo restablecer la contraseña"
+        );
 
         // ÉXITO
         mostrarModal(
@@ -109,7 +111,7 @@ async function resetearClave(event) {
         );
 
     } catch (err) {
-        mostrarModal("❌ Error inesperado:<br>No se pudo conectar con el servidor.", "Aceptar");
+        mostrarModal("❌ Error:<br>" + err.message, "Aceptar");
     }
 }
 
