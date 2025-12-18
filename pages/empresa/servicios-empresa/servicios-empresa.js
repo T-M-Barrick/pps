@@ -337,10 +337,10 @@ function adaptarHorariosParaBackend(horariosUI) {
             validarHora5Min(int.desde);
             validarHora5Min(int.hasta);
             validarOrdenHoras(int.desde, int.hasta);
-            validarDuracionEnIntervalo(
+            validarIntervaloHora(
                 int.desde,
                 int.hasta,
-                Number(campoDuracion.value)
+                int.int
             );
 
             lista.push({
@@ -394,7 +394,7 @@ function validarOrdenHoras(desde, hasta) {
     }
 };
 
-function validarDuracionEnIntervalo(desde, hasta, duracion) {
+function validarIntervaloHora(desde, hasta, intervalo) {
     const [h1, m1] = desde.split(":").map(Number);
     const [h2, m2] = hasta.split(":").map(Number);
 
@@ -403,9 +403,9 @@ function validarDuracionEnIntervalo(desde, hasta, duracion) {
 
     const diff = minutosFin - minutosInicio;
 
-    if (diff % duracion !== 0) {
+    if (diff % intervalo !== 0) {
         throw new Error(
-            `El rango ${desde}–${hasta} no coincide con la duración (${duracion} min)`
+            `El rango ${desde}–${hasta} no coincide con la duración (${intervalo} min)`
         );
     };
 };
