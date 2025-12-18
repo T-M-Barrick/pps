@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Servicios | MiTurno</title>
+
+    <link rel="stylesheet" href="servicios-empresa.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="favicon" href="../../../favicon.ico">
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav class="main-nav">
+        <button class="btn-back" onclick="history.back()">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <h2 class="titulo-nav">Servicios</h2>
+        <div class="espaciador"></div>
+    </nav>
+
+    <main class="contenedor">
+
+        <button class="btn-agregar" id="btnAbrirAgregar">
+            <i class="fa-solid fa-plus"></i> Agregar servicio </button>
+
+        <div id="listaServicios" class="lista-servicios"></div>
+
+    </main>
+
+    <!-- MODAL AGREGAR / EDITAR SERVICIO -->
+    <div id="modalServicio" class="modal-overlay">
+        <div class="modal-servicio">
+            <div class="modal-contenido modal-servicio-contenido">
+
+                <h3 id="tituloModal">Agregar servicio</h3>
+
+                <!-- CAMPOS PRINCIPALES -->
+                <div class="campos-servicio">
+                    <div class="campo">
+                        <label for="campoNombre">Nombre</label>
+                        <input type="text" id="campoNombre" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="campoDuracion">Duración (min)</label>
+                        <input type="number" id="campoDuracion" min="1">
+                    </div>
+
+                    <div class="campo campo-profesional">
+                        <label>Profesional</label>
+
+                        <!-- Para AGREGAR -->
+                        <select id="campoProfesionalSelect"></select>
+
+                        <!-- Para EDITAR: texto no editable -->
+                        <input type="text" id="campoProfesionalTexto" disabled class="oculto">
+                    </div>
+
+                    <div class="campo">
+                        <label for="campoPrecio">Precio ($)</label>
+                        <input type="number" id="campoPrecio" min="0">
+                    </div>
+
+                    <div class="campo campo-full">
+                        <label for="campoAclaracion">Aclaración</label>
+                        <textarea id="campoAclaracion" rows="3"
+                            placeholder="Ej: Incluye lavado, no incluye brushing"></textarea>
+                    </div>
+                </div>
+
+                <h4 class="subtitulo-bloque">
+                    Días y horarios disponibles
+                    <span class="subtitulo-ayuda">
+                        Elegí los días, el intervalo, la cantidad máxima de turnos y los horarios disponibles.
+                    </span>
+                </h4>
+                <!-- DÍAS & HORARIOS  -->
+                <div id="diasContainer" class="dias-container">
+                </div>
+
+                <div class="modal-botones">
+                    <button id="btnCancelarModal" class="btn-cancelar">Cancelar</button>
+                    <button id="btnGuardarModal" class="btn-enviar">Guardar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ELIMINAR -->
+    <div id="modalEliminar" class="modal-overlay">
+        <div class="modal-contenido">
+
+            <h3>Eliminar servicio</h3>
+            <p id="textoEliminar" class="modal-subtitulo">¿Deseás eliminar este servicio?</p>
+
+            <div class="modal-botones">
+                <button id="btnCancelarEliminar" class="btn-cancelar">Cancelar</button>
+                <button id="btnConfirmarEliminar" class="btn-enviar" style="background:#a00000;">Eliminar</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module" defer src="servicios-empresa.js"></script>
+</body>
+
+</html>

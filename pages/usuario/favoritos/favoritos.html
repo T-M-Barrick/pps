@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiTurno</title>
-    <link rel="stylesheet" href="./panel-empresa.css">
+    <link rel="stylesheet" href="./favoritos.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
             <div class="user-dropdown-content">
                 <a href="../home-usuario/home-usuario.html">Inicio</a>
                 <a href="../historial-usuario/historial-usuario.html">Historial de turnos</a>
-                <a href="../favoritos/favoritos.html">Favoritos</a>
+                <a href="./favoritos.html">Favoritos</a>
                 <a href="../mis-empresas/mis-empresas.html">Mis Empresas</a>
                 <a href="../contacto/contacto.html">Contacto</a>
 
@@ -57,68 +57,17 @@
     </nav>
 
     <main>
-        <!-- BOTÓN VOLVER ATRÁS -->
-        <a href="../home-usuario/home-usuario.html" class="btn-volver-atras">
-            <i class="fas fa-arrow-left"></i> Volver
-        </a>
 
-        <div class="empresa-perfil-container">
+        <h2 class="home-title">Mis favoritos</h2>
 
-            <div class="empresa-perfil-header">
-                <img id="empresaLogo" class="empresa-perfil-logo" src="../../img/icono-perfil.png">
-                <div>
-                    <h2 id="empresaNombre" class="empresa-perfil-nombre">Nombre de Empresa</h2>
-                    <p id="empresaRubro" class="empresa-perfil-rubro">Rubro</p>
-                </div>
-            </div>
-
-            <div class="empresa-perfil-info">
-
-                <div class="empresa-info-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span id="empresaDireccion">Dirección aquí</span>
-                    <a id="empresaLinkMaps" class="empresa-ver-maps" target="_blank">Ver en Maps</a>
-                </div>
-
-                <div class="empresa-info-item">
-                    <i class="fas fa-info-circle"></i>
-                    <span id="empresaAclaracionDireccion">—</span>
-                </div>
-
-                <div class="empresa-info-item">
-                    <i class="fas fa-phone"></i>
-                    <span id="empresaTelefono">—</span>
-                </div>
-
-                <div class="empresa-info-item">
-                    <i class="fas fa-envelope"></i>
-                    <span id="empresaEmail">—</span>
-                </div>
-
-                <p class="empresa-info">
-                    Calificación: <span id="empresaCalificacion"></span>
-                </p>
-
-            </div>
-
-            <button class="btn-reservar" id="btnReservar">
-                Reservar turno
-            </button>
-
-            <button class="btn-favorito" id="btnFavorito">
-                ★ Agregar a Favoritos
-            </button>
-
+        <div id="favoritosContainer" class="favoritos-container">
+            <!-- Se carga desde JS -->
         </div>
-
     </main>
 
-
-
-    <script src="../home-usuario/empresas-data.js"></script>
-    <script src="./panel-empresa.js"></script>
-    <script src="../home-usuario/home-dropdown.js"></script>
-
+<script src="../home-usuario/empresas-data.js"></script>
+<script src="./favoritos.js"></script>
+<script src="../home-usuario/home-dropdown.js"></script>
 
 </body>
 

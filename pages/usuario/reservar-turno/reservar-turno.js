@@ -1,33 +1,162 @@
-import { BACKEND_URL, manejarErrorRespuesta } from "../../../config.js";
+import { BACKEND_URL, manejarErrorRespuesta, formatearFecha } from "../../../config.js";
 
-/* ============================================================
-   DATA DE PRUEBA
-============================================================ */
-const datosPrueba = {
-    servicios: [
-        { id: 1, nombre: 'Corte de Cabello', descripcion: 'Corte y peinado profesional', duracion: '30 min', precio: 3500 },
-        { id: 2, nombre: 'Coloración', descripcion: 'Tinte y tratamiento de color', duracion: '90 min', precio: 9000 },
-        { id: 3, nombre: 'Limpieza Facial', descripcion: 'Tratamiento completo de limpieza', duracion: '45 min', precio: 5000 },
-        { id: 4, nombre: 'Manicura', descripcion: 'Manicura y esmaltado', duracion: '45 min', precio: 4500 },
-        { id: 5, nombre: 'Pedicura', descripcion: 'Pedicura completa y esmaltado', duracion: '45 min', precio: 4800 },
-        { id: 6, nombre: 'Masaje Relajante', descripcion: 'Masaje corporal relajante', duracion: '60 min', precio: 6000 },
-    ],
-    profesionales: [
-        { id: 1, nombre: 'María García', especialidad: 'Estilista', avatar: 'M' },
-        { id: 2, nombre: 'Juan López', especialidad: 'Barbero', avatar: 'J' },
-        { id: 3, nombre: 'Ana Martínez', especialidad: 'Estilista', avatar: 'A' },
-        { id: 4, nombre: 'Otro', especialidad: 'A convenir por empresa', avatar: 'A' },
-    ]
-};
+const params = new URLSearchParams(window.location.search);
+const empresaId = Number(params.get("id"));
 
 /* VARIABLES DE SELECCIÓN */
-let servicioSeleccionado = null;
-let profesionalSeleccionado = null;
+let servicioConProfesionalSeleccionado = null;
+let serviciosSeleccionados = null;
 let fechaSeleccionada = null;
 let horaSeleccionada = null;
+let profesionalIndiferente = false;
 
-/* PASOS */
+let datosServicios = [];
 let pasoActual = 1;
+
+function obtenerRangosOcupados(turnosActuales) {
+    return turnosActuales.map(t => ({
+        inicio: t.inicio,
+        fin: t.fin
+    }));
+}
+
+function obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada) {
+    const [year, month, day] = fechaSeleccionada.split("-").map(Number);
+    const diaSemana = new Date(year, month-1, day)
+        .toLocaleDateString("es-AR", { weekday: "long" }); // "lunes"
+    
+    return servicio.disponibilidades.filter(d => d.dia === diaSemana);
+}
+
+function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
+    const [year, month, day] = fechaISO.split("-").map(Number);
+    const [hh, mm] = hora.split(":").map(Number);
+    const inicio = new Date(year, month-1, day, hh, mm);
+
+    const fin = new Date(inicio);
+    fin.setMinutes(fin.getMinutes() + duracionServicio);
+
+    return rangosOcupados.some(r =>
+        inicio < r.fin && fin > r.inicio
+    );
+}
+function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
+    const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
+    const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
+
+    return disponibilidadesDia.filter(d => {
+        // Contamos cuántos turnos ya hay en esta fecha y hora
+        const turnosEnHora = servicio.turnos_actuales.filter(t => {
+            const tFecha = t.inicio.toISOString().split("T")[0]; // "YYYY-MM-DD"
+            const tHora = t.inicio.toLocaleTimeString("es-AR", {hour: "2-digit", minute: "2-digit"});
+            return tFecha === fechaSeleccionada && tHora === d.hora;
+        }).length;
+
+        // Solo permitimos la disponibilidad si no supera cant_max_turnos
+        return turnosEnHora < d.cant_max_turnos &&
+               !estaHoraOcupada(fechaSeleccionada, d.hora, rangosOcupados, servicio.duracion);
+    });
+}
+
+function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
+    const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
+    const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
+
+    return disponibilidadesDia.filter(d =>
+        !estaHoraOcupada(
+            fechaSeleccionada,
+            d.hora,
+            rangosOcupados,
+            servicio.duracion
+        )
+    );
+}
+
+function calcularHorariosCualquiera(servicios, fechaSeleccionada) {
+    const horasSet = new Set();
+
+    servicios.forEach(servicio => {
+        const horarios = calcularHorariosDisponibles(
+            servicio,
+            fechaSeleccionada
+        );
+
+        horarios.forEach(h => horasSet.add(h.hora));
+    });
+
+    return Array.from(horasSet)
+        .sort()
+        .map(hora => ({ hora }));
+}
+
+/* ============================================================
+   INICIALIZAR
+============================================================ */
+document.addEventListener("DOMContentLoaded", async () => {
+    await cargarTurnosDisponibles(empresaId);
+    // 1️⃣ Cargar turnos desde sessionStorage
+    const serviciosGuardados = sessionStorage.getItem(`servicios_de_empresa${empresaId}`);
+
+    if (serviciosGuardados) {
+        const serviciosAPI = JSON.parse(serviciosGuardados);
+        datosServicios = serviciosAPI.map(adaptarServicio);
+    };
+
+    renderizarServicios();
+    mostrarPaso(1);
+});
+
+async function cargarTurnosDisponibles(empresaId) {
+    try {
+        const servicios = await manejarErrorRespuesta(
+            await fetch(`${BACKEND_URL}/users/empresas/${empresaId}/turnos_disponibles`, {
+                method: "GET",
+                credentials: "include"
+            }),
+            "No se pudieron cargar los turnos disponibles"
+        );
+
+        sessionStorage.setItem(`servicios_de_empresa${empresaId}`, JSON.stringify(servicios));
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function formatearTurnosActuales(turnos) {
+    return turnos.map(t => {
+        const inicio = new Date(t.fecha_hora);
+        const fin = new Date(inicio.getTime() + (t.duracion ?? 0) * 60000);
+
+        return {
+            id: t.id,
+            inicio: inicio,
+            fin: fin,
+            fecha: formatearFecha(inicio),
+            hora: inicio.toLocaleTimeString("es-AR", {hour: "2-digit", minute: "2-digit"}), // "HH:MM"
+            fechaOriginal: t.fecha_hora
+        }
+    })
+}
+
+// ==============================
+//  ADAPTAR SERVICIO PARA EL FRONT
+// ==============================
+function adaptarServicio(ser) {
+
+    return {
+        id: ser.id,
+        nombre: ser.nombre,
+        duracion: ser.duracion ?? 0,
+        precio: ser.precio,
+        aclaracion: ser.aclaracion,
+        profesional_id: ser.profesional_id,
+        profesional_dni: ser.profesional_dni,
+        profesional: `${ser.profesional_apellido}, ${ser.profesional_nombre}`,
+        disponibilidades: ser.disponibilidades,
+        turnos_actuales: formatearTurnosActuales(ser.turnos_actuales)
+    };
+}
 
 /* ============================================================
    INDICADORES SUPERIORES DE PASOS
@@ -59,9 +188,24 @@ function mostrarPaso(n) {
     pasoActual = n;
     document.querySelectorAll("section[id^='paso-']").forEach(sec => sec.classList.add("hidden"));
 
-    if (n === 1) document.getElementById("paso-servicio").classList.remove("hidden");
-    if (n === 2) document.getElementById("paso-profesional").classList.remove("hidden");
-    if (n === 3) document.getElementById("paso-hora").classList.remove("hidden");
+    if (n === 1) {
+        document.getElementById("paso-servicio").classList.remove("hidden");
+        // Reinicializar selección de servicios
+        serviciosSeleccionados = null;
+        servicioConProfesionalSeleccionado = null;
+        profesionalIndiferente = false;
+    };
+    if (n === 2) {
+        document.getElementById("paso-profesional").classList.remove("hidden");
+        servicioConProfesionalSeleccionado = null;
+        profesionalIndiferente = false;
+    };
+    if (n === 3) {
+        document.getElementById("paso-hora").classList.remove("hidden");
+        fechaSeleccionada = null;
+        horaSeleccionada = null;
+        prepararCalendario();
+    };
     if (n === 4) document.getElementById("paso-resumen").classList.remove("hidden");
 
     actualizarIndicadorPasos();
@@ -69,13 +213,21 @@ function mostrarPaso(n) {
 
 window.siguientePaso = function () {
     if (pasoActual === 1) {
-        if (!servicioSeleccionado) return;
-        renderizarProfesionales();
-        mostrarPaso(2);
+        if (!serviciosSeleccionados || serviciosSeleccionados.length === 0) return;
+
+        // 👉 si hay más de un servicio igual → elegir profesional
+        if (serviciosSeleccionados.length > 1) {
+            renderizarProfesionales(serviciosSeleccionados);
+            mostrarPaso(2);
+        } 
+        // 👉 si hay uno solo → saltear profesionales
+        else {
+            servicioConProfesionalSeleccionado = serviciosSeleccionados[0];
+            mostrarPaso(3);
+        }
     }
     else if (pasoActual === 2) {
-        if (!profesionalSeleccionado) return;
-        prepararCalendario();
+        if (!profesionalIndiferente && !servicioConProfesionalSeleccionado) return;
         mostrarPaso(3);
     }
     else if (pasoActual === 3) {
@@ -92,55 +244,98 @@ window.pasoAnterior = function () {
 /* ============================================================
    PASO 1 – SERVICIOS
 ============================================================ */
-function renderizarServicios() {
-    const cont = document.getElementById("listaServicios");
+function agruparServicios(servicios) {
+    const mapa = {};
 
-    cont.innerHTML = datosPrueba.servicios.map(s => `
-        <div class="tarjeta-servicio bg-white border-2 border-gray-200 rounded-lg p-5 cursor-pointer hover:shadow-lg hover:border-[#AC0505]"
-             onclick="seleccionarServicio(${s.id}, event)">
-            <h3 class="font-bold text-gray-800 text-lg">${s.nombre}</h3>
-            <p class="text-sm text-gray-600 mt-2">${s.descripcion}</p>
-            <p class="text-sm text-gray-500 mt-3">⏱ ${s.duracion}</p>
-            <p class="text-base font-semibold text-[#AC0505] mt-3">$ ${s.precio} ARS</p>
-        </div>
-    `).join('');
+    servicios.forEach(s => {
+        const key = `${s.nombre}|${s.duracion}|${s.precio}`;
+        if (!mapa[key]) mapa[key] = [];
+        mapa[key].push(s);
+    });
+
+    return Object.values(mapa);
 }
 
-window.seleccionarServicio = (id, e) => {
+function renderizarServicios() {
+    const cont = document.getElementById("listaServicios");
+    const grupos = agruparServicios(datosServicios);
+
+    cont.innerHTML = grupos.map((grupo, index) => {
+        const s = grupo[0]; // servicio representativo
+
+        return `
+            <div class="tarjeta-servicio bg-white border-2 border-gray-200 rounded-lg p-5 cursor-pointer"
+                 onclick="seleccionarServicioGrupo(${index}, event)">
+                <h3 class="font-bold text-gray-800 text-lg">${s.nombre}</h3>
+                <p class="text-sm text-gray-500 mt-2">⏱ ${s.duracion} min</p>
+                <p class="text-base font-semibold text-[#AC0505] mt-3">$ ${s.precio}</p>
+            </div>
+        `;
+    }).join("");
+
+    window._gruposServicios = grupos; // guardamos los grupos
+}
+
+window.seleccionarServicioGrupo = (index, e) => {
     document.querySelectorAll(".tarjeta-servicio").forEach(c => c.classList.remove("seleccionado"));
+
     e.currentTarget.classList.add("seleccionado");
 
-    servicioSeleccionado = datosPrueba.servicios.find(s => s.id === id);
+    const grupo = window._gruposServicios[index];
+
+    serviciosSeleccionados = grupo; // ahora es un ARRAY
     document.getElementById("btnSiguienteServicio").disabled = false;
 };
+
 
 /* ============================================================
    PASO 2 – PROFESIONALES
 ============================================================ */
-function renderizarProfesionales() {
+function renderizarProfesionales(grupoServicios) {
     const cont = document.getElementById("listaProfesionales");
 
-    cont.innerHTML = datosPrueba.profesionales.map(p => `
-        <div class="tarjeta-profesional bg-white border-2 border-gray-200 rounded-lg p-5 cursor-pointer hover:shadow-lg hover:border-[#AC0505]"
-             onclick="seleccionarProfesional(${p.id}, event)">
-            <div class="w-16 h-16 bg-[#e5e5e5] text-white rounded-full flex items-center justify-center text-2xl font-bold">
-                ${p.avatar}
-            </div>
-            <h3 class="font-bold text-gray-800 mt-3">${p.nombre}</h3>
-            <p class="text-sm text-gray-600">${p.especialidad}</p>
+    cont.innerHTML = `
+        <div class="tarjeta-profesional bg-white border-2 border-dashed border-[#AC0505] rounded-lg p-5 cursor-pointer"
+             onclick="seleccionarCualquiera(event)">
+            <h3 class="font-bold text-[#AC0505]">⭐ Cualquiera disponible</h3>
+            <p class="text-sm text-gray-600">
+                Te asignamos el primero que tenga turno
+            </p>
         </div>
-    `).join('');
+    `;
+
+    cont.innerHTML += grupoServicios.map(s => `
+        <div class="tarjeta-profesional bg-white border-2 border-gray-200 rounded-lg p-5 cursor-pointer"
+             onclick="seleccionarProfesional(${s.id}, event)">
+            <h3 class="font-bold text-gray-800">${s.profesional}</h3>
+        </div>
+    `).join("");
 
     document.getElementById("btnSiguienteProfesional").disabled = true;
 }
 
 window.seleccionarProfesional = (id, e) => {
     document.querySelectorAll(".tarjeta-profesional").forEach(c => c.classList.remove("seleccionado"));
-    e.currentTarget.classList.add("seleccionado");
 
-    profesionalSeleccionado = datosPrueba.profesionales.find(p => p.id === id);
+    e.currentTarget.classList.add("seleccionado");
+    profesionalIndiferente = false;
+
+    servicioConProfesionalSeleccionado = serviciosSeleccionados.find(s => s.id === id);
     document.getElementById("btnSiguienteProfesional").disabled = false;
 };
+
+window.seleccionarCualquiera = (e) => {
+    document.querySelectorAll(".tarjeta-profesional")
+        .forEach(c => c.classList.remove("seleccionado"));
+
+    e.currentTarget.classList.add("seleccionado");
+
+    servicioConProfesionalSeleccionado = null;
+    profesionalIndiferente = true;
+
+    document.getElementById("btnSiguienteProfesional").disabled = false;
+};
+
 
 /* ============================================================
    PASO 3 – FECHA Y HORA 
@@ -148,17 +343,16 @@ window.seleccionarProfesional = (id, e) => {
 
 let diasCalendario = [];
 let disponibilidadDias = {};
-let horariosGenerados = [];
 let indiceSemanaActual = 0;
 let maxSemana = 0;
 
-/* Genera 56 días + disponibilidad aleatoria para la simulacion*/
+/* Genera 56 días + disponibilidad según turnos actuales y cant_max_turnos */
 function generarDiasCalendario() {
     const hoy = new Date();
     diasCalendario = [];
     disponibilidadDias = {};
 
-    for (let i = 0; i < 56; i++) {
+    for (let i = 0; i < 56; i++) {  // 56 días
         const fecha = new Date(hoy);
         fecha.setDate(hoy.getDate() + i);
 
@@ -174,27 +368,32 @@ function generarDiasCalendario() {
             diaSemana: diaSemana
         });
 
-        disponibilidadDias[iso] = Math.random() < 0.7;
-    }
+        // Chequeamos si hay al menos un horario disponible para esta fecha y que respete cant_max_turnos
+        let tieneHorarios = false;
+
+        if (profesionalIndiferente) {
+            // Si el usuario eligió "cualquier profesional", calculamos los horarios combinados
+            const horarios = calcularHorariosCualquiera(serviciosSeleccionados, iso);
+            if (horarios.length > 0) {
+                tieneHorarios = true;
+            }
+        } else if (servicioConProfesionalSeleccionado) {
+            // Si eligió un profesional específico, usamos solo ese servicio
+            const horarios = calcularHorariosDisponibles(servicioConProfesionalSeleccionado, iso);
+            if (horarios.length > 0) {
+                tieneHorarios = true;
+            }
+        }
+
+        disponibilidadDias[iso] = tieneHorarios;
 
     maxSemana = Math.ceil(diasCalendario.length / 7) - 1;  
-}
-
-/* Horarios cada 5 minutos */
-function generarHorariosDia() {
-    const horarios = [];
-    for (let h = 9; h <= 19; h++) {
-        for (let m = 0; m < 60; m += 5) {
-            horarios.push(`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`);
-        }
     }
-    return horarios;
-}
+};
 
 /* Preparar calendario */
 function prepararCalendario() {
     generarDiasCalendario();
-    horariosGenerados = generarHorariosDia();
 
     fechaSeleccionada = null;
     horaSeleccionada = null;
@@ -207,7 +406,7 @@ function prepararCalendario() {
     document.getElementById("btnSiguienteHora").disabled = true;
 
     renderSemanaActual();
-}
+};
 
 /* Pintar semana actual */
 function renderSemanaActual() {
@@ -255,7 +454,7 @@ function renderSemanaActual() {
     html += `</div>`;
 
     cont.innerHTML = html;
-}
+};
 
 /* Cambiar semana */
 window.cambiarSemana = function (delta) {
@@ -289,20 +488,38 @@ window.seleccionarFecha = (fechaISO, e) => {
     renderHorariosParaFecha();
 };
 
-/* Renderizar horarios */
 function renderHorariosParaFecha() {
     const cont = document.getElementById("listaHoras");
 
-    cont.innerHTML = horariosGenerados.map(h => `
+    let horariosDisponibles;
+
+    if (profesionalIndiferente) {
+        horariosDisponibles = calcularHorariosCualquiera(
+            serviciosSeleccionados,
+            fechaSeleccionada
+        );
+    } else {
+        horariosDisponibles = calcularHorariosDisponibles(
+            servicioConProfesionalSeleccionado,
+            fechaSeleccionada
+        );
+    }
+
+    if (horariosDisponibles.length === 0) {
+        cont.innerHTML = "<p>No hay horarios disponibles para este día.</p>";
+        return;
+    }
+
+    cont.innerHTML = horariosDisponibles.map(d => `
         <button class="boton-hora"
-                onclick="seleccionarHora('${h}', event)">
-            ${h}
+                onclick="seleccionarHora('${d.hora}', event)">
+            ${d.hora}
         </button>
     `).join("");
 
     horaSeleccionada = null;
     document.getElementById("btnSiguienteHora").disabled = true;
-}
+};
 
 window.seleccionarHora = (h, e) => {
     horaSeleccionada = h;
@@ -317,24 +534,38 @@ window.seleccionarHora = (h, e) => {
    PASO 4 – RESUMEN
 ============================================================ */
 function renderizarResumen() {
-    document.getElementById("resumen-servicio").textContent = servicioSeleccionado.nombre;
-    document.getElementById("resumen-precio").textContent = servicioSeleccionado.precio + " ARS";
-    document.getElementById("resumen-profesional").textContent = profesionalSeleccionado.nombre;
-    document.getElementById("resumen-fecha").textContent = fechaSeleccionada;
-    document.getElementById("resumen-hora").textContent = horaSeleccionada;
-}
+    const servicio = servicioConProfesionalSeleccionado 
+                     || (serviciosSeleccionados && serviciosSeleccionados[0]); // tomamos uno representativo
+    const profesional = profesionalIndiferente 
+                        ? "Cualquiera disponible" 
+                        : (servicio?.profesional || "");
+    const fecha = formatearFecha(fechaSeleccionada);
+
+    document.getElementById("resumen-servicio").textContent = servicio?.nombre || "-";
+    document.getElementById("resumen-precio").textContent = servicio?.precio ? `$ ${servicio.precio}` : "-";
+    document.getElementById("resumen-profesional").textContent = profesional;
+    document.getElementById("resumen-fecha").textContent = fecha || "-";
+    document.getElementById("resumen-hora").textContent = horaSeleccionada || "-";
+};
 
 /* ============================================================
    MODAL CONFIRMACIÓN
 ============================================================ */
 window.mostrarModalReserva = function () {
+    const servicio = servicioConProfesionalSeleccionado 
+                     || (serviciosSeleccionados && serviciosSeleccionados[0]); // tomamos uno representativo
+    const profesional = profesionalIndiferente 
+                        ? "Cualquiera disponible" 
+                        : (servicio?.profesional || "");
+    const fecha = formatearFecha(fechaSeleccionada);
+
     document.getElementById("modalReserva").style.display = "flex";
 
-    document.getElementById("modal-resumen-servicio").textContent = servicioSeleccionado.nombre;
-    document.getElementById("modal-resumen-profesional").textContent = profesionalSeleccionado.nombre;
+    document.getElementById("modal-resumen-servicio").textContent = servicio?.nombre || "-";
+    document.getElementById("modal-resumen-profesional").textContent = profesional;
     document.getElementById("modal-resumen-fechahora").textContent =
-        `${fechaSeleccionada} - ${horaSeleccionada}`;
-    document.getElementById("precioConfirmado").textContent = servicioSeleccionado.precio + " ARS";
+        `${fecha} - ${horaSeleccionada}`;
+    document.getElementById("precioConfirmado").textContent = servicio?.precio ? `$ ${servicio.precio}` : "-";
 };
 
 window.cerrarModalReserva = function (irAMisTurnos = false) {
@@ -345,23 +576,43 @@ window.cerrarModalReserva = function (irAMisTurnos = false) {
     }
 };
 
-/* ============================================================
-   INICIALIZAR
-============================================================ */
-document.addEventListener("DOMContentLoaded", () => {
-    renderizarServicios();
-    mostrarPaso(1);
-});
+async function aceptarTurno() {
+    const turno = {
+        empresa_id: empresaId.id, // asumiendo que tienes la empresa seleccionada
+        fecha_hora: new Date(`${fechaSeleccionada}T${horaSeleccionada}`), // datetime completo
+        servicio_id: servicioConProfesionalSeleccionado?.id || serviciosSeleccionados[0]?.id,
+        profesional_id: profesionalIndiferente ? 0 : (servicioConProfesionalSeleccionado?.profesional_id || null)
+    };
 
-async function cargarTurnosDisponibles(empresaId) {
     try {
-        const response = await fetch(`/empresas/${empresaId}/turnos_disponibles`);
-        if (!response.ok) throw new Error("No hay turnos disponibles");
-        const servicios = await response.json();
+        const data = await manejarErrorRespuesta(
+            await fetch(`${BACKEND_URL}/users/turnos`, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(turno)
+            }),
+            "No se pudO reservar su turno"
+        );
 
-        console.log("Turnos disponibles:", servicios);
+        if (data.turno) {
+            // Leer los turnos existentes
+            let turnos = JSON.parse(sessionStorage.getItem("usuarioturnos")) || [];
 
-    } catch (error) {
-        console.error(error);
+            // Agregar el nuevo turno
+            turnos.push(data.turno);
+
+            // Guardar de nuevo
+            sessionStorage.setItem("usuarioturnos", JSON.stringify(turnos));
+
+            // Mostramos el modal con la info del turno
+            mostrarModalReserva();
+        } else {
+            // No llegó turno, mostramos el mensaje del backend
+            alert(data.message || "No se pudo reservar el turno");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error al reservar el turno");
     }
-}
+};

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>MiTurno - Historial</title>
+    <link rel="stylesheet" href="./historial-empresa.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="favicon" href="../../../favicon.ico">
+
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="user-menu-container">
+          <button class="btn-volver" onclick="history.back()">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+        </div>
+
+        <div class="nav-logo-container">
+            <a href="../home-empresa/home-empresa.html">
+                <img src="../../img/logo-miturno2.png" alt="Mi Turno Logo">
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <h2 class="home-title">Historial de turnos</h2>
+        <div id="historialContainer" class="historial-container"></div>
+        <button id="btnCargarMas" class="btn-cargar-mas">
+            Cargar más turnos
+        </button>
+    </main>
+
+    <script type="module" defer src="./historial-empresa.js"></script>
+    <script src="../home-empresa/home-dropdown.js"></script>
+</body>
+</html>

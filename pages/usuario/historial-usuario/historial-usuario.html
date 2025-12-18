@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiTurno - Mis Empresas</title>
-    <link rel="stylesheet" href="./mis-empresas.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>MiTurno - Historial</title>
+    <link rel="stylesheet" href="./historial.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="favicon" href="../../../favicon.ico">
+
 </head>
 
 <body>
-
     <nav class="main-nav">
         <div class="user-menu-container">
             <button class="menu-toggle-btn user-menu-dropdown-btn">
@@ -23,11 +20,10 @@
 
             <div class="user-dropdown-content">
                 <a href="../home-usuario/home-usuario.html">Inicio</a>
-                <a href="../historial-usuario/historial-usuario.html">Historial de turnos</a>
+                <a href="./historial-usuario.html">Historial de Turnos</a>
                 <a href="../favoritos/favoritos.html">Favoritos</a>
-                <a href="./mis-empresas.html">Mis Empresas</a>
+                <a href="../mis-empresas/mis-empresas.html">Mis Empresas</a>
                 <a href="../contacto/contacto.html">Contacto</a>
-
             </div>
         </div>
 
@@ -38,9 +34,6 @@
         </div>
 
         <div class="nav-icons" style="display: flex; align-items: center;">
-            <button class="menu-toggle-btn">
-            </button>
-
             <div class="dropdown-menu-container">
                 <button class="menu-toggle-btn profile-dropdown-btn">
                     <i class="fas fa-user-circle"></i>
@@ -57,13 +50,14 @@
     </nav>
 
     <main>
-        <h2 class="home-title">Mis Empresas</h2>
-        <div class="empresas-container" id="empresasContainer"></div>
+        <h2 class="home-title">Historial de turnos</h2>
+        <div id="historialContainer" class="historial-container"></div>
+        <button id="btnCargarMas" class="btn-cargar-mas">
+            Cargar más turnos
+        </button>
     </main>
 
+    <script type="module" defer src="./historial-usuario.js"></script>
     <script src="../home-usuario/home-dropdown.js"></script>
-    <script src="./mis-empresas.js"></script>
-
 </body>
-
 </html>

@@ -34,14 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-function limpiarDomicilio(domicilio) {
-    if (!domicilio) return "";
-    const partes = domicilio.split(",").map(p => p.trim());
-    // Sacar provincia (última parte)
-    partes.pop();
-    return partes.join(", ");
-}
-
 function adaptarEmpresa(emp) {
 
     return {
@@ -54,12 +46,16 @@ function adaptarEmpresa(emp) {
         logo: emp.logo
                 ? `data:image/png;base64,${emp.logo}` 
                 : "../../img/icono-perfil.png",
-        domicilio: limpiarDomicilio(emp.direccion.domicilio),
+        calle: emp.direccion.calle,
+        altura: emp.direccion.altura || "",
+        localidad: emp.direccion.localidad,
+        departamento: emp.direccion.departamento,
+        provincia: emp.direccion.provincia,
+        pais: emp.direccion.pais,
         lat: emp.direccion.lat,
         lng: emp.direccion.lng,
-        aclaracion_de_direccion: emp.direccion.aclaracion,
-        calificacion: emp.calificacion,
-        telefonos: emp.telefonos
+        aclaracion_de_direccion: emp.direccion.aclaracion || "",
+        calificacion: emp.calificacion
     };
 }
 

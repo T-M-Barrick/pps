@@ -143,12 +143,15 @@ async function registrarUsuario(event) {
         const telefono = document.getElementById("telefono").value.trim();
         const password = document.getElementById("clave").value.trim();
 
-        const domicilio = `${calle} ${altura}, ${localidad}, ${departamento}, ${provincia}`;
-
         const direccionObj = {
-            domicilio: domicilio,
-            lat: lat,
-            lng: lng,
+            calle: calle,
+            altura: altura,
+            localidad: localidad,
+            departamento: departamento,
+            provincia: provincia,
+            pais: "Argentina",
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
             aclaracion: aclaracion,
         };
 
@@ -166,7 +169,7 @@ async function registrarUsuario(event) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify(payload),
+            body: JSON.stringify(payload)
         });
 
         const data = await respuesta.json();
@@ -177,22 +180,6 @@ async function registrarUsuario(event) {
         }
 
         // Si llegamos acá → registro OK y cookie creada
-
-        // Obtener datos completos del usuario logueado
-        console.log("Solicitando /users/me con cookies");
-        const r2 = await fetch(`${BACKEND_URL}/users/me`, {
-            method: "GET",
-            credentials: "include",
-        });
-
-        const usuarioCompleto = await r2.json();
-
-        if (!r2.ok) {
-            crearModal("Error", "No se pudo obtener el perfil del usuario.", "error");
-            return;
-        }
-
-        sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
 
         // Redirigir al panel
         window.location.href = "../home-usuario/home-usuario.html";

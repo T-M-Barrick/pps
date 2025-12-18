@@ -2,110 +2,100 @@ const seccionEmpresa = document.getElementById("seccion-empresa");
 const seccionDomicilio = document.getElementById("seccion-domicilio");
 const btnSiguiente = document.getElementById("btn-siguiente");
 const btnAnterior = document.getElementById("btn-anterior");
+const formularioEmpresa = document.getElementById("formulario-empresa");
 
-let mapa;
-let marcador;
+// -------------------------------------------------------------
+// CONECTAR FORMULARIO
+// -------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+    formularioEmpresa.addEventListener("submit", registrarEmpresa);
+});
 
-/* Modal elementos */
-const modalOverlay = document.getElementById("modal-overlay");
-const modalMensaje = document.getElementById("modal-mensaje");
-const modalBtn = document.getElementById("modal-btn");
+// -------------------------------------------------------------
+// REGISTRAR EMPRESA (POST AL BACKEND)
+// -------------------------------------------------------------
+async function registrarEmpresa(event) {
+    event.preventDefault(); // evita que el form recargue la página
 
-
-/* ============================================================
-   ======================= MAPA LEAFLET ========================
-   ============================================================ */
-
-function iniciarMapa() {
-    if (mapa) {
-        setTimeout(() => mapa.invalidateSize(), 300);
-        return;
-    }
-
-    const latInicial = -34.6037;
-    const lngInicial = -58.3816;
-
-    mapa = L.map("mapa").setView([latInicial, lngInicial], 13);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-    }).addTo(mapa);
-
-    marcador = L.marker([latInicial, lngInicial], { draggable: true }).addTo(mapa);
-
-    actualizarCoordenadas(latInicial, lngInicial);
-
-    mapa.on("click", (e) => {
-        marcador.setLatLng(e.latlng);
-        actualizarCoordenadas(e.latlng.lat, e.latlng.lng);
-    });
-
-    marcador.on("dragend", () => {
-        const pos = marcador.getLatLng();
-        actualizarCoordenadas(pos.lat, pos.lng);
-    });
-
-    setTimeout(() => mapa.invalidateSize(), 300);
-}
-
-
-/* ============================================================
-   ==================== COORDENADAS HIDDEN ====================
-   ============================================================ */
-
-function actualizarCoordenadas(lat, lng) {
-    const texto = document.getElementById("texto-coordenadas");
-    texto.style.display = "none";
-    texto.textContent = `Ubicación seleccionada: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-
-    document.getElementById("latitud").value = lat;
-    document.getElementById("longitud").value = lng;
-}
-
-
-/* ============================================================
-   ===================== BUSCAR DIRECCIÓN ======================
-   ============================================================ */
-
-document.getElementById("btn-buscar").addEventListener("click", async () => {
-
-    const provincia = document.getElementById("input-provincia").value.trim();
-    const municipio = document.getElementById("input-municipio").value.trim();
-    const localidad = document.getElementById("input-localidad").value.trim();
-    const calle = document.getElementById("input-calle").value.trim();
-    const altura = document.getElementById("input-altura").value.trim();
-
-    if (!provincia || !municipio || !localidad || !calle || !altura) {
-        alert("Completa todos los campos para buscar la dirección.");
-        return;
-    }
-
-    let direccion = `${calle} ${altura}, ${localidad}, ${municipio}, ${provincia}, Argentina`;
-
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}`;
-
+    // Tomar datos del formulario
     try {
-        const respuesta = await fetch(url);
-        const datos = await respuesta.json();
+        const nombre = document.getElementById("nombre").value.trim();
+        const cuit = parseInt(document.getElementById("cuit").value.trim());
+        const email = document.getElementById("email").value.trim();
+        const rubro = document.getElementById("rubro").value.trim();
+        const rubro2 = document.getElementById("rubro2").value.trim();
+        const provincia = document.getElementById("provincia").value.trim();
+        const departamento = document.getElementById("departamento").value.trim();
+        const localidad = document.getElementById("localidad").value.trim();
+        const calle = document.getElementById("calle").value.trim();
+        const altura = document.getElementById("altura").value.trim();
+        const lat = parseFloat(document.getElementById("lat").value);
+        const lng = parseFloat(document.getElementById("lng").value);
+        const aclaracion = document.getElementById("datos_adicionales").value.trim();
+        const telefono = document.getElementById("telefono").value.trim();
 
-        if (datos.length === 0) {
-            alert("No se encontró la dirección. Verifica los datos ingresados.");
+        const direccionObj = {
+            calle: calle,
+            altura: altura,
+            localidad: localidad,
+            departamento: departamento,
+            provincia: provincia,
+            pais: "Argentina",
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
+            aclaracion: aclaracion,
+        };
+
+        const payload = {
+            cuit: cuit,
+            nombre: nombre,
+            email: email,
+            rubro: rubro,
+            rubro2: rubro2,
+            telefonos: [parseInt(telefono)],
+            direcciones: [direccionObj],
+            logo: logoBase64
+        };
+
+        const respuesta = await fetch(`${BACKEND_URL}/empresas/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(payload)
+        });
+
+        const data = await respuesta.json();
+
+        // ❌ ERROR DEL BACKEND
+        if (!respuesta.ok) {
+            crearModal(
+                "Error al crear empresa",
+                data.detail || "Ocurrió un error",
+                "error"
+            );
             return;
         }
 
-        const lat = parseFloat(datos[0].lat);
-        const lon = parseFloat(datos[0].lon);
-
-        marcador.setLatLng([lat, lon]);
-        mapa.setView([lat, lon], 16);
-
-        actualizarCoordenadas(lat, lon);
+        // ✅ ÉXITO REAL
+        crearModal(
+            "Empresa creada",
+            data.msg,
+            "success",
+            () => {
+                sessionStorage.setItem("empresa_activa_id", data.empresa_id);
+                window.location.href = `../home-empresa/home-empresa.html`;
+            }
+        );
 
     } catch (error) {
-        alert("Error buscando la dirección. Intenta nuevamente.");
+        console.error(error);
+        crearModal(
+            "Error inesperado",
+            "No se pudo conectar con el servidor",
+            "error"
+        );
     }
-});
-
+}
 
 /* ============================================================
    ======================= CAMBIO DE PASO ======================
@@ -125,36 +115,70 @@ btnSiguiente.addEventListener("click", () => {
     seccionEmpresa.classList.remove("activa");
     seccionDomicilio.classList.add("activa");
 
-    iniciarMapa();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollTo({ top: 0, behavior: "smooth" });
 });
 
 btnAnterior.addEventListener("click", () => {
     seccionDomicilio.classList.remove("activa");
     seccionEmpresa.classList.add("activa");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollTo({ top: 0, behavior: "smooth" });
 });
 
+// -------------------------------------------------------------
+// MODAL
+// -------------------------------------------------------------
+function crearModal(titulo, mensaje, tipo, callback = null) {
+    const color = tipo === "success" ? "#28a745" : "#dc3545";
+    const icono = tipo === "success" ? "fa-check-circle" : "fa-times-circle";
 
-/* ============================================================
-   ======================= MODAL FINAL =========================
-   ============================================================ */
+    const overlay = document.createElement("div");
+    overlay.id = "modal-overlay";
+    overlay.style = `
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.65);
+        backdrop-filter: blur(4px);
+        display: flex; justify-content: center; align-items: center;
+        z-index: 2000; opacity: 0; transition: opacity .25s ease;
+    `;
 
-document.getElementById("formulario-empresa").addEventListener("submit", function (e) {
-    e.preventDefault();
+    const card = document.createElement("div");
+    card.style = `
+        background: white; padding: 35px; width: 90%; max-width: 380px;
+        border-radius: 18px; text-align: center;
+        transform: scale(0.8); transition: transform .25s ease;
+        font-family: 'Poppins';
+    `;
 
-    modalMensaje.textContent = "Empresa creada con éxito";
-    modalOverlay.classList.add("mostrar");
+    card.innerHTML = `
+        <i class="fas ${icono}" style="font-size: 60px; color: ${color}; margin-bottom: 15px;"></i>
+        <h2 style="margin-bottom:10px; font-size:22px; font-weight:700;">${titulo}</h2>
+        <p style="font-size:16px; margin-bottom:20px; color:#555;">${mensaje}</p>
+        <button id="modal-cerrar" class="btn-rojo"
+            style="padding:10px 20px; width:100%; border-radius:12px; font-size:16px;">
+            Aceptar
+        </button>
+    `;
+
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
 
     setTimeout(() => {
-        window.location.href = "../empresa/panel.html";
-    }, 2000);
-});
+        overlay.style.opacity = "1";
+        card.style.transform = "scale(1)";
+    }, 10);
 
-modalBtn.addEventListener("click", () => {
-    modalOverlay.classList.remove("mostrar");
-});
+    const cerrar = () => {
+        overlay.style.opacity = "0";
+        card.style.transform = "scale(0.8)";
+        setTimeout(() => overlay.remove(), 250);
+        if (callback) callback();
+    };
 
+    document.getElementById("modal-cerrar").onclick = cerrar;
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) cerrar();
+    });
+}
 
 /* ============================================================
    ================== SUBIR LOGO Y PREVISUALIZAR ===============
@@ -163,48 +187,55 @@ modalBtn.addEventListener("click", () => {
 const inputLogo = document.getElementById("archivoLogo");
 const btnSubir = document.querySelector(".btn-subir");
 const imgPreview = document.querySelector(".logo-previo");
-const spanInputFalso = document.querySelector(".input-falso");
+
+let logoBase64 = null;
 
 if (inputLogo && btnSubir && imgPreview) {
 
-    // Abrir el selector de archivo al hacer clic en el botón
+    // Abrir selector de archivos
     btnSubir.addEventListener("click", () => {
         inputLogo.click();
     });
 
-    // Cuando el usuario selecciona un archivo
+    // Al seleccionar archivo
     inputLogo.addEventListener("change", () => {
         const file = inputLogo.files[0];
         if (!file) return;
 
-        const tipo = file.type;
+        /* ======================
+           VALIDACIONES
+        ====================== */
 
-        // Validar tipo de archivo
-        if (
-            tipo !== "image/jpeg" &&
-            tipo !== "image/jpg" &&
-            tipo !== "image/png"
-        ) {
-            alert("Solo se permiten imágenes JPG o PNG.");
+        // 1️⃣ Solo PNG
+        if (file.type !== "image/png") {
+            alert("Solo se permiten imágenes PNG.");
             inputLogo.value = "";
             return;
         }
 
-        // Mostrar nombre en el span "Logo" (opcional)
-        if (spanInputFalso) {
-            const maxChars = 20;
-            let nombre = file.name;
-            if (nombre.length > maxChars) {
-                nombre = nombre.substring(0, maxChars - 3) + "...";
-            }
-            spanInputFalso.textContent = nombre;
+        // 2️⃣ Máximo 10 KB
+        const maxSize = 10 * 1024; // 10 KB
+        if (file.size > maxSize) {
+            alert("La imagen no puede superar los 10 KB.");
+            inputLogo.value = "";
+            return;
         }
 
-        // Leer el archivo y actualizar la imagen previa
+        /* ======================
+           BASE64 + PREVIEW
+        ====================== */
+
         const reader = new FileReader();
         reader.onload = (e) => {
-            imgPreview.src = e.target.result;   // reemplaza la imagen por la seleccionada
+            const dataUrl = e.target.result;
+
+            // Preview
+            imgPreview.src = dataUrl;
+
+            // Guardar BASE64 PURO (sin data:image/png;base64,)
+            logoBase64 = dataUrl.split(",")[1];
         };
+
         reader.readAsDataURL(file);
     });
 }

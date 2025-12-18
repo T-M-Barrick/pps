@@ -1,0 +1,338 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #ecf0f1;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* NAV */
+.main-nav {
+    width: 100%;
+    background: #AC0505;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.titulo-nav {
+    margin: 0 auto;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* CONTENEDOR */
+.contenedor {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 15px;
+}
+
+/* FILTROS*/
+.filtros {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+}
+
+.filtros input,
+.filtros select {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+/* GRID 3 COLUMNAS */
+.lista-turnos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+/* CARD */
+.turno-card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.20);
+    border-left: 8px solid transparent;
+}
+
+/* HEADER */
+.turno-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.turno-dato {
+    margin: 4px 0;
+    font-size: 15px;
+}
+
+/* BADGES */
+.badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* COLORES DE ESTADO */
+.badge.confirmado { background: #e8f5e9; color: #4CAF50; }
+.turno-card.confirmado { border-left-color: #4CAF50; }
+
+.badge.cumplido { background: #e3f2fd; color: #2196F3; }
+.turno-card.cumplido { border-left-color: #2196F3; }
+
+.badge.no_cumplido { background: #fff3e0; color: #FB8C00; }
+.turno-card.no_cumplido { border-left-color: #FB8C00; }
+
+.badge.cancelado { background: #ffebee; color: #E53935; }
+.turno-card.cancelado { border-left-color: #E53935; }
+
+/* BOTÓN DETALLE */
+.btn-detalle {
+    margin-top: 12px;
+    background: #AC0505;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-detalle:hover {
+    background: #7D0000;
+}
+
+/* BOTÓN ELIMINAR TURNO e */
+.btnEliminarTurno {
+    background: #fde8e8;          
+    color: #e53935;               
+    padding: 8px 18px;
+    border-radius: 999px;         
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(229, 57, 53, 0.15);
+    transition: all 0.2s ease;
+}
+
+/* Hover */
+.btnEliminarTurno:hover {
+    background: #fbdada;
+}
+
+/* Estado oculto (cuando es confirmado) */
+.btnEliminarTurno.oculto {
+    display: none;
+}
+
+/* MODAL*/
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-turno {
+    width: 90%;
+    max-width: 450px;
+}
+
+.modal-contenido {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-sizing: border-box;
+}
+
+.modal-dato {
+    margin-bottom: 10px;
+}
+
+.modal-separador {
+    height: 1px;
+    background: #ccc;
+    margin: 12px 0;
+}
+
+/* BOTONES MODAL */
+.modal-botones-columna {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+/* ESTILO BASE */
+.modal-botones-columna button {
+    padding: 10px 22px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    width: auto;     
+    display: inline-block;
+}
+
+/* CUMPLIDO */
+.btn-verde {
+    background: #e3f2fd;
+    color: #1e88e5;
+}
+.btn-verde:hover {
+    background: #d0e7fb;
+}
+
+/* NO CUMPLIDO  */
+.btn-amarillo {
+    background: #fff3e0;
+    color: #fb8c00;
+}
+.btn-amarillo:hover {
+    background: #ffe0b2;
+}
+
+/* CANCELAR */
+.btn-rojo {
+    background: #b71c1c;
+    color: #ffffff;
+}
+.btn-rojo:hover {
+    background: #d32f2f;
+}
+
+/* CONTACTAR DESACTIVADO */
+.btn-desactivado {
+    background: #cccccc;
+    color: white;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* BOTÓN CERRAR */
+.btn-cancelar2 {
+    background: #555;
+    color: white;
+}
+.btn-cancelar2:hover {
+    background: #444;
+}
+
+/* HEADER DEL MODAL: título + estado */
+.modal-header-turno {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.badge-modal {
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    color: white;
+}
+
+/* Colores iguales que los badges de las cards */
+.badge-modal.confirmado { background: #e8f5e9; color: #4CAF50; }
+.badge-modal.cumplido { background: #e3f2fd; color: #2196F3; }
+.badge-modal.no-cumplido { background: #fff3e0; color: #FB8C00; }
+.badge-modal.cancelado{ background: #ffebee; color: #E53935; }
+.badge-modal.vencido { background: #555; color: white; }
+
+
+/* Separadores */
+.modal-separador {
+    height: 1px;
+    background: #ddd;
+    margin: 12px 0;
+}
+
+
+
+/* =====================
+   RESPONSIVE
+===================== */
+
+/* Tablets — 2 columnas */
+@media (max-width: 900px) {
+    .lista-turnos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Celulares grandes — 1 columna */
+@media (max-width: 600px) {
+    .lista-turnos {
+        grid-template-columns: 1fr;
+    }
+
+    .filtros {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .turno-card {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .btn-detalle {
+        padding: 9px;
+        font-size: 14px;
+    }
+}
+
+/* Tamaño exacto 430 × 932 */
+@media (max-width: 430px) and (max-height: 932px) {
+    .lista-turnos {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .turno-card {
+        padding: 15px;
+        border-radius: 14px;
+    }
+
+    .badge {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    /* modal */
+    .modal-contenido {
+        padding: 18px;
+        width: 92%;
+        max-width: 380px;
+    }
+}

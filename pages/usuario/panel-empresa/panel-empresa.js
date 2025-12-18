@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (empresa) {
         document.getElementById("empresaNombre").textContent = empresa.nombre || "";
         document.getElementById("empresaRubro").textContent = empresa.rubro2 ? `${empresa.rubro} - ${empresa.rubro2}` : empresa.rubro || "";
-        document.getElementById("empresaDireccion").textContent = empresa.domicilio || "";
+        document.getElementById("empresaDireccion").textContent = armarDomicilio(empresa) || "";
         document.getElementById("empresaAclaracionDireccion").textContent = empresa.aclaracion_de_direccion || "—";
-        document.getElementById("empresaTelefono").textContent = empresa.telefonos?.[0].[1] || "—";
+        document.getElementById("empresaTelefono").textContent = empresa.telefonos?.[0]?.[1] || "—";
         document.getElementById("empresaEmail").textContent = empresa.email || "—";
         document.getElementById("empresaLogo").src = empresa.logo || "../../img/icono-perfil.png";
         const linkMapsEl = document.getElementById("empresaLinkMaps");
@@ -140,11 +140,32 @@ function mostrarUbicacion(lat, lng) {
     window.open(url, "_blank");
 }
 
-function limpiarDomicilio(domicilio) {
-    if (!domicilio) return "";
-    const partes = domicilio.split(",").map(p => p.trim());
-    // Sacar provincia (última parte)
-    partes.pop();
+function armarDomicilio(apiObj) {
+    if (!apiObj) return "";
+
+    const partes = [];
+
+    // Calle + altura
+    if (apiObj.calle) {
+        let calle = apiObj.calle;
+
+        if (apiObj.altura) {
+            calle += ` ${apiObj.altura}`;
+        }
+
+        partes.push(calle);
+    }
+
+    // Localidad
+    if (apiObj.localidad) {
+        partes.push(apiObj.localidad);
+    }
+
+    // Municipio / departamento
+    if (apiObj.municipio) {
+        partes.push(apiObj.municipio);
+    }
+
     return partes.join(", ");
 }
 
@@ -160,10 +181,15 @@ function adaptarEmpresa(emp) {
         logo: emp.logo
                 ? `data:image/png;base64,${emp.logo}` 
                 : "../../img/icono-perfil.png",
-        domicilio: limpiarDomicilio(emp.direccion.domicilio),
+        calle: emp.direccion.calle,
+        altura: emp.direccion.altura || "",
+        localidad: emp.direccion.localidad,
+        departamento: emp.direccion.departamento,
+        provincia: emp.direccion.provincia,
+        pais: emp.direccion.pais,
         lat: emp.direccion.lat,
         lng: emp.direccion.lng,
-        aclaracion_de_direccion: emp.direccion.aclaracion,
+        aclaracion_de_direccion: emp.direccion.aclaracion || "",
         calificacion: emp.calificacion,
         telefonos: emp.telefonos
     };

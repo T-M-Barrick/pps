@@ -76,5 +76,6 @@ function crearCardEmpresa(emp) {
 // ACCESO A HOME-EMPRESA
 function irAEmpresa(id) {
     // Esto va a la home de empresa con parámetros
-    window.location.href = `../../empresa/home-empresa/home-empresa.html?id=${id}`;
+    sessionStorage.setItem("empresa_activa_id", id);
+    window.location.href = `../../empresa/home-empresa/home-empresa.html`;
 }

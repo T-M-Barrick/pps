@@ -1,7 +1,9 @@
-/* Renderiza (muestra) tarjetas de turnos, Muestra un modal con el detalle del turno, Permite
-cambiar estados PERO SOLO LOCALMENTE (sin backend), etc.*/
+/* 
+Renderiza tarjetas de turnos, maneja modales de detalle,
+sincroniza estados con backend y mantiene cache en sessionStorage.
+*/
 
-import { BACKEND_URL, manejarErrorRespuesta } from "../../../config.js";
+import { BACKEND_URL, manejarErrorRespuesta, formatearFecha } from "../../../config.js";
 
 // ========================================
 //         CONFIGURACIÓN DE ESTADOS
@@ -12,7 +14,7 @@ const configuracionEstado = {
     'no-cumplido': { label: 'No cumplido', class: 'status-no-cumplido' },
     'cancelado-usuario': { label: 'Cancelado por usuario', class: 'status-cancelado-usuario' },
     'cancelado-empresa': { label: 'Cancelado por empresa', class: 'status-cancelado-empresa' },
-    vencido: { label: 'Vencido', class: 'status-vencido' }   // ← AGREGADO
+    vencido: { label: 'Vencido', class: 'status-vencido' }
 };
 
 // ========================================
@@ -67,7 +69,7 @@ async function cargarDatosDesdeBackend() {
         });
 
         if (!respuesta.ok) {
-            console.error("No se pudo obtener los datos del usuario.");
+            console.error("No se pudieron obtener los datos del usuario.");
             window.location.href = "../../../index.html";
             return;
         }
@@ -115,16 +117,6 @@ function mostrarBienvenida(usuario) {
     if (divBienvenida) {
         divBienvenida.textContent = `Bienvenido, ${usuario.nombre}`;
     }
-}
-
-function formatearFecha(fechaISO) {
-    const fecha = new Date(fechaISO);
-
-    const dia = String(fecha.getDate()).padStart(2, "0");
-    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
-    const año = fecha.getFullYear();
-
-    return `${dia}/${mes}/${año}`;
 }
 
 function turnoEstaVencido(fechaHoraISO, duracionMinutos) {
@@ -198,11 +190,32 @@ function calcularTiempoRestante(fechaHoraISO, duracionMinutos) {
     return "Falta 1 minuto"; // fallback seguro
 }
 
-function limpiarDomicilio(domicilio) {
-    if (!domicilio) return "";
-    const partes = domicilio.split(",").map(p => p.trim());
-    // Sacar provincia (última parte)
-    partes.pop();
+function armarDomicilio(apiObj) {
+    if (!apiObj) return "";
+
+    const partes = [];
+
+    // Calle + altura
+    if (apiObj.calle) {
+        let calle = apiObj.calle;
+
+        if (apiObj.altura) {
+            calle += ` ${apiObj.altura}`;
+        }
+
+        partes.push(calle);
+    }
+
+    // Localidad
+    if (apiObj.localidad) {
+        partes.push(apiObj.localidad);
+    }
+
+    // Municipio / departamento
+    if (apiObj.municipio) {
+        partes.push(apiObj.municipio);
+    }
+
     return partes.join(", ");
 }
 
@@ -254,7 +267,12 @@ function adaptarTurno(apiTurno) {
         logo: apiTurno.logo_empresa 
                 ? `data:image/png;base64,${apiTurno.logo_empresa}` 
                 : "../../img/icono-perfil.png",
-        domicilio: limpiarDomicilio(apiTurno.direccion.domicilio),
+        calle: apiTurno.direccion.calle,
+        altura: apiTurno.direccion.altura,
+        localidad: apiTurno.direccion.localidad,
+        departamento: apiTurno.direccion.departamento,
+        provincia: apiTurno.direccion.provincia,
+        pais: apiTurno.direccion.pais,
         lat: apiTurno.direccion.lat,
         lng: apiTurno.direccion.lng,
         aclaracion_de_direccion: apiTurno.direccion.aclaracion,
@@ -429,7 +447,7 @@ function mostrarDetalleTurno(id) {
         <div class="modal-row">
             <i class="fas fa-map-marker-alt"></i>
             <span>
-                ${turno.domicilio}
+                ${armarDomicilio(turno)}
                 <a href="#" onclick="mostrarUbicacion('${turno.lat}', '${turno.lng}')" class="modal-ver-direccion">Ver Dirección</a>
             </span>
             <span>${turno.aclaracion_de_direccion}</span>
@@ -484,7 +502,10 @@ function mostrarDetalleTurno(id) {
 
         cerrarDetalleTurno();
 
-        mostrarDetalleTurno(turnoActualizado.id);
+        setTimeout(() => {
+            mostrarDetalleTurno(turnoActualizado.id);
+        }, 0);
+
     };
 
     const btnCancelar = body.querySelector(".btn-cancelar-turno");
@@ -498,21 +519,25 @@ function mostrarDetalleTurno(id) {
 
         cerrarDetalleTurno();
 
-        mostrarDetalleTurno(turnoActualizado.id);
+        setTimeout(() => {
+            mostrarDetalleTurno(turnoActualizado.id);
+        }, 0);
     };
 
     const btnEliminar = body.querySelector(".btn-eliminar");
-    if (btnEliminar) btnEliminar.onclick = async () => {
-        const idEliminado = await eliminarTurno(turno.id);
-        if (!idEliminado) return;
+    if (btnEliminar) {
+        btnEliminar.onclick = async () => {
+            const idEliminado = await eliminarTurno(turno.id);
+            if (!idEliminado) return;
 
-        cerrarDetalleTurno();
+            cerrarDetalleTurno();
 
-        // Eliminar la tarjeta del DOM
-        const tarjeta = document.getElementById("tarjeta-" + idEliminado);
-        if (tarjeta) tarjeta.remove();
+            // Eliminar la tarjeta del DOM
+            const tarjeta = document.getElementById("tarjeta-" + idEliminado);
+            if (tarjeta) tarjeta.remove();
 
-    };
+        };
+    }
 
     body.querySelector(".btn-whatsapp").onclick = () =>
         contactarWhatsapp(turno.id);
@@ -838,33 +863,7 @@ setInterval(() => {
 }, 60000);  // cada 1 minuto
 
 // Actualiza estados cada 5 minutos
-setInterval(actualizarEstadosTurnos, 5 * 60 * 1000);
-
-/*
-// ========================================
-//     RENDERIZAR TARJETAS
-// ========================================
-function renderizarTarjetas() {
-    const contenedor = document.getElementById('cardsContainer');
-    if (!contenedor) return;
-
-    contenedor.innerHTML = "";
-    let turnos = datosTurnos;
-
-    // búsqueda
-    if (estadoApp.busqueda.trim()) {
-        const b = estadoApp.busqueda.toLowerCase();
-        turnos = turnos.filter(t =>
-            t.nombre_de_servicio.toLowerCase().includes(b) ||
-            t.empresa.toLowerCase().includes(b)
-        );
-    }
-
-    if (turnos.length === 0) {
-        contenedor.innerHTML = `<div style="text-align:center; padding:30px; color:#777;">No se encontraron turnos</div>`;
-        return;
-    }
-
-    turnos.forEach(t => contenedor.appendChild(crearTarjeta(t)));
-}
-*/
+setInterval(
+    () => actualizarEstadosTurnos(),
+    5 * 60 * 1000
+);

@@ -11,3 +11,17 @@ export async function manejarErrorRespuesta(resp, defaultMsg = "Error inesperado
 
     return data; // <-- devuelve JSON
 }
+
+export function formatearFecha(fechaISO) {
+    if (!fechaISO) return "—";
+
+    const fecha = new Date(fechaISO);
+
+    if (isNaN(fecha)) return "—";
+
+    const dia = String(fecha.getDate()).padStart(2, "0");
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+    const año = fecha.getFullYear();
+
+    return `${dia}/${mes}/${año}`;
+}

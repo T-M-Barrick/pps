@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiTurno</title>
+    <link rel="stylesheet" href="./perfil-usuario.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="favicon" href="../../../favicon.ico">
+</head>
+
+<body>
+
+    <nav class="main-nav">
+        <div class="user-menu-container">
+            <button class="menu-toggle-btn user-menu-dropdown-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="user-dropdown-content">
+                <a href="../home-usuario/home-usuario.html">Inicio</a>
+                <a href="../historial-usuario/historial-usuario.html">Historial de turnos</a>
+                <a href="../favoritos/favoritos.html">Favoritos</a>
+                <a href="../mis-empresas/mis-empresas.html">Mis Empresas</a>
+                <a href="../contacto/contacto.html">Contacto</a>
+            </div>
+        </div>
+
+        <div class="nav-logo-container">
+            <a href="../home-usuario/home-usuario.html">
+                <img src="../../img/logo-miturno2.png" alt="MiTurno Logo">
+            </a>
+        </div>
+
+        <div class="nav-icons">
+            <div class="dropdown-menu-container">
+                <button class="menu-toggle-btn profile-dropdown-btn">
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-caret-down dropdown-arrow"></i>
+                </button>
+
+                <div class="dropdown-content">
+                    <a href="../../empresa/registro-empresa/registro-empresa.html">Crear Empresa</a>
+                    <a href="../perfil-usuario/perfil-usuario.html">Ver perfil</a>
+                    <a href="#" class="logout-link">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <main>
+        <div class="perfil-container">
+
+            <h2>Perfil de Usuario</h2>
+
+            <form id="formPerfilUsuario">
+
+                <section class="seccion-formulario">
+                    <h3 class="titulo-seccion">Datos personales</h3>
+
+                    <div class="grid-2">
+                        <div class="grupo-input">
+                            <input type="text" id="nombre" class="input-formulario" placeholder="Nombre" required>
+                        </div>
+                        <div class="grupo-input">
+                            <input type="text" id="apellido" class="input-formulario" placeholder="Apellido" required>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="grupo-input">
+                            <input type="text" id="dni" class="input-formulario" placeholder="DNI" required>
+                        </div>
+                        <div class="grupo-input">
+                            <input type="text" id="telefono" class="input-formulario" placeholder="Teléfono" required>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="grupo-input">
+                            <input type="email" id="email" class="input-formulario" placeholder="Email" required>
+                        </div>
+                        <div class="grupo-input">
+                            <input type="password" id="clave" class="input-formulario" placeholder="Contraseña" required>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- ======================= DOMICILIO ======================= -->
+                <section class="seccion-formulario seccion-domicilio">
+                    <h3 class="titulo-seccion">Datos de domicilio</h3>
+
+                    <div class="grid-2">
+
+                        <div class="grupo-input">
+                            <select id="provincia" class="input-formulario" required>
+                                <option value="">Seleccione provincia</option>
+                            </select>
+                        </div>
+
+                        <div class="grupo-input">
+                            <select id="departamento" class="input-formulario" required>
+                                <option value="">Seleccione departamento</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="grid-2">
+
+                        <div class="grupo-input">
+                            <select id="localidad" class="input-formulario" required>
+                                <option value="">Seleccione localidad</option>
+                            </select>
+                        </div>
+
+                        <div class="grupo-input">
+                            <input type="text" id="calle" placeholder="Calle" class="input-formulario" required>
+                        </div>
+
+                    </div>
+
+                    <div class="grid-2">
+
+                        <div class="grupo-input">
+                            <input type="text" id="altura" placeholder="Altura" class="input-formulario">
+                        </div>
+
+                        <div class="grupo-input">
+                            <input type="text" id="datos_adicionales" placeholder="Datos adicionales" class="input-formulario">
+                        </div>
+
+                    </div>
+
+                    <h3 class="subtitulo">📍 Selecciona la ubicación en el mapa:</h3>
+                    <div id="mapa"></div>
+                    <p id="texto-coordenadas"></p>
+
+                    <input type="hidden" id="lat">
+                    <input type="hidden" id="lng">
+                </section>
+
+                <!-- BOTÓN FINAL -->
+                <button type="submit" class="btn btn-actualizar-perfil btn-guardar-perfil">
+                    Actualizar perfil
+                </button>
+
+            </form>
+        </div>
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- JS -->
+    <script type="module" src="./perfil-usuario.js"></script>
+
+    <!-- Dropdown -->
+    <script src="../../usuario/home-usuario/home-dropdown.js"></script>
+
+</body>
+
+</html>
