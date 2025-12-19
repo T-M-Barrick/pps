@@ -160,7 +160,7 @@ const diasSemana = [
     { key: "Dom", label: "Dom", laboral: false }
 ];
 
-function crearGrupoIntervalo(container, desde = "09:00", hasta = "17:00") {
+function crearGrupoIntervalo(container, desde = "09:00", hasta = "17:00", int = null, max = null) {
     const grupo = document.createElement("div");
     grupo.classList.add("intervalo-grupo"); 
 
@@ -170,31 +170,32 @@ function crearGrupoIntervalo(container, desde = "09:00", hasta = "17:00") {
 
     const lblInt = document.createElement("span");
     lblInt.textContent = "Int:";
-    
+
     const inputInt = document.createElement("input");
     inputInt.type = "number";
     inputInt.min = 1;
     inputInt.max = 999;
     inputInt.placeholder = "5";
     inputInt.classList.add("input-int");
-    
+    if (int !== null) inputInt.value = int;
+
     const lblMax = document.createElement("span");
     lblMax.textContent = "Max:";
-    
+
     const inputMax = document.createElement("input");
     inputMax.type = "number";
     inputMax.min = 1;
     inputMax.max = 99;
     inputMax.placeholder = "1";
     inputMax.classList.add("input-max");
-    
-    configIntMax.append(lblInt, inputInt, lblMax, inputMax);
+    if (max !== null) inputMax.value = max;
 
+    configIntMax.append(lblInt, inputInt, lblMax, inputMax);
 
     // Horario (Desde/Hasta y Botón de Eliminar)
     const horarioFila = document.createElement("div");
     horarioFila.classList.add("intervalo"); 
-    
+
     const selDesde = crearInputHora(desde);
     selDesde.classList.add("select-desde");
 
@@ -206,9 +207,7 @@ function crearGrupoIntervalo(container, desde = "09:00", hasta = "17:00") {
     btnEliminar.classList.add("btn-int");
     btnEliminar.onclick = () => grupo.remove(); // Elimina todo el grupo
 
-
     horarioFila.append(selDesde, selHasta, btnEliminar);
-
     grupo.append(configIntMax, horarioFila);
     container.appendChild(grupo);
 };
@@ -247,7 +246,7 @@ function construirUIHorarios(horariosIniciales = null, esNuevo = false) {
       if (intervalosData.length) {
         chk.checked = true;
         intervalosData.forEach(int => {
-          crearGrupoIntervalo(gruposContainer, int.desde, int.hasta); // Crear grupo inicial
+          crearGrupoIntervalo(gruposContainer, int.desde, int.hasta, int.int, int.max); // Crear grupo inicial
         });
       }
 
