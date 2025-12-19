@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             map.setView([datosUsuario.lat, datosUsuario.lng], 15);
             marker = L.marker([datosUsuario.lat, datosUsuario.lng]).addTo(map);
         }
-    }
+    };
 
     // --- Eventos de selects ---
     provSelect.onchange = async () => {
@@ -170,6 +170,14 @@ async function cargarDomicilioDesdeBackend(prov, depto, loc, calle, alt, usuario
 
     calle.value = usuario.calle || "";
     alt.value = usuario.altura || "";
+
+    const latInput = document.getElementById("lat");
+    const lngInput = document.getElementById("lng");
+
+    if (usuario.lat && usuario.lng) {
+        latInput.value = usuario.lat;
+        lngInput.value = usuario.lng;
+    }
 };
 
 function cargarDatosUsuario() {
@@ -211,6 +219,7 @@ function adaptarUsuario(apiUsuario) {
         nombre: apiUsuario.nombre,
         email: apiUsuario.email,
         telefono: apiUsuario.telefonos?.[0] ?? [],
+        direccion_id: direccion?.id || 0,
         calle: direccion.calle,
         altura: direccion.altura || "",
         localidad: direccion.localidad,
@@ -248,6 +257,7 @@ function actualizarPerfil() {
             const password = document.getElementById("clave").value.trim();
 
             const direccionObj = {
+                id: datosUsuario?.direccion_id,
                 calle: calle,
                 altura: altura,
                 localidad: localidad,

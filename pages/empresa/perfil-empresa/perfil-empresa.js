@@ -176,6 +176,14 @@ async function cargarDomicilioDesdeBackend(prov, depto, loc, calle, alt, empresa
 
     calle.value = empresa.calle || "";
     alt.value = empresa.altura || "";
+
+    const latInput = document.getElementById("lat");
+    const lngInput = document.getElementById("lng");
+
+    if (empresa.lat && empresa.lng) {
+        latInput.value = empresa.lat;
+        lngInput.value = empresa.lng;
+    }
 };
 
 async function cargarDatosDesdeBackend() {
@@ -240,6 +248,7 @@ function adaptarEmpresa(emp) {
                 ? `data:image/png;base64,${emp.logo}` 
                 : "../../img/icono-perfil.png",
         telefono: emp.telefonos?.[0] ?? [],
+        direccion_id: emp.direccion.id,
         calle: emp.direccion.calle,
         altura: emp.direccion.altura || "",
         localidad: emp.direccion.localidad,
@@ -278,6 +287,7 @@ function actualizarPerfil() {
             const telefono = document.getElementById("telefono").value.trim();
 
             const direccionObj = {
+                id: datosEmpresa?.direccion_id || 0,
                 calle: calle,
                 altura: altura,
                 localidad: localidad,
