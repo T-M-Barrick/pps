@@ -204,7 +204,7 @@ document.getElementById("btnGuardarCambioRol").onclick = async () => {
                 method: "PUT",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nuevo_rol: nuevoRol })
+                body: JSON.stringify( {nuevo_rol: nuevoRol} )
             }
         ),
         "Error al modificar rol"

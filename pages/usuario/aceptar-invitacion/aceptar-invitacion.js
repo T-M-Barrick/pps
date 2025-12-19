@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             await fetch(`${BACKEND_URL}/empresas/aceptar_rol`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token })
+                body: JSON.stringify({ token:token })
             }),
             "No se pudo procesar la invitación"
         );

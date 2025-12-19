@@ -531,7 +531,7 @@ btnGuardarModal.onclick = async () => {
                     method: "PATCH",
                     credentials: "include",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify( data )
+                    body: JSON.stringify(data)
                 }),
                 "No se pudo actualizar el servicio"
             );
@@ -541,7 +541,7 @@ btnGuardarModal.onclick = async () => {
                     method: "POST",
                     credentials: "include",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify( data )
+                    body: JSON.stringify(data)
                 }),
                 "No se pudo crear el servicio"
             );
@@ -587,9 +587,7 @@ btnConfirmarEliminar.onclick = async () => {
                 method: "DELETE",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    data
-                })
+                body: JSON.stringify(data)
             }),
             "No se pudo eliminar el servicio"
         );
