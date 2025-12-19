@@ -22,18 +22,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function cargarDatosDesdeBackend() {
     try {
-        const data = await fetch(`${BACKEND_URL}/empresas/${empresaId}`, {
+        const res = await fetch(`${BACKEND_URL}/empresas/${empresaId}`, {
             method: "GET",
             credentials: "include"
         });
 
-        if (!data.ok) {
+        if (!res.ok) {
             console.error("No se pudieron obtener los miembros de la empresa.");
             window.location.href = "../home-empresa/home-empresa.html";
             return;
         }
 
-        console.log(data.miembros)
+        const data = await res.json();
 
         miembros = data.miembros;
 
@@ -49,7 +49,6 @@ async function cargarDatosDesdeBackend() {
 
 // RENDER DE LISTA
 function renderizar(miembros, rol) {
-    console.log("renderizando miembros")
     listaEmpleados.innerHTML = "";
     const rolUsuario = rol;
 
