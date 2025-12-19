@@ -25,8 +25,12 @@ function obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada) {
     const diaSemana = new Date(year, month-1, day)
         .toLocaleDateString("es-AR", { weekday: "long" }); // "lunes"
     
-    return servicio.disponibilidades.filter(d => d.dia === diaSemana);
-}
+    //return servicio.disponibilidades.filter(d => d.dia === diaSemana);
+    return servicio.disponibilidades.filter(d => {
+        console.log("comparando:", d.dia, "vs", diaSemana);
+        return d.dia === diaSemana;
+    });
+};
 
 function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
     const [year, month, day] = fechaISO.split("-").map(Number);
