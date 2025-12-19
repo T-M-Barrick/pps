@@ -1,3 +1,5 @@
+import { BACKEND_URL } from "../../../config.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // Menú de Perfil 
@@ -91,5 +93,29 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleProfileDropdown();
         }
     });
+
+    const logoutLink = document.querySelector(".logout-link");
+
+    if (logoutLink) {
+        logoutLink.addEventListener("click", async (e) => {
+            e.preventDefault(); // evitar recarga
+            try {
+                const response = await fetch(`${BACKEND_URL}/users/logout`, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                if (response.ok) {
+                    sessionStorage.clear(); // limpiar sessionStorage
+                    window.location.href = "../../../index.html"; // redirigir al login
+                } else {
+                    console.error("Error al cerrar sesión");
+                }
+            } catch (error) {
+                console.error("Error en la petición logout:", error);
+            }
+        });
+    }
 
 });
