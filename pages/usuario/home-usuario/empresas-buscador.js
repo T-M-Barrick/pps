@@ -133,7 +133,7 @@ function mostrarEmpresas(empresas) {
     contEmpresas.innerHTML = ""; // limpia solo empresas
 
     if (!empresas || empresas.length === 0) {
-        empresasContainer.innerHTML = `
+        contEmpresas.innerHTML = `
             <div class="mensaje-empresas-vacio">
                 <p>No se encontraron empresas que coincidan con tu búsqueda</p>
             </div>
@@ -142,7 +142,6 @@ function mostrarEmpresas(empresas) {
     }
 
     empresas.forEach(emp => {
-        const tarjeta = crearCardEmpresa(emp);
-        empresasContainer.appendChild(tarjeta);
+        contEmpresas.innerHTML += crearCardEmpresa(emp);
     });
-}
+};
