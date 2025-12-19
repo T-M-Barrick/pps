@@ -218,6 +218,8 @@
         // =======================
         const map = L.map('mapa').setView([-34.60, -58.38], 12);
 
+        window.mapaLeaflet = map;
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19
         }).addTo(map);
@@ -275,6 +277,9 @@
                 } else {
                     marker.setLatLng([data.lat, data.lng]);
                 }
+
+                latInput.value = data.lat;
+                lngInput.value = data.lng;
 
                 // Actualizar calle con la calle devuelta
                 if (data.calle) {

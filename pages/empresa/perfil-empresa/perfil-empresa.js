@@ -21,6 +21,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // --- Inicializar mapa ---
     const map = L.map('mapa').setView([-34.60, -58.38], 12);
+
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 1000);
+
+    // También recalcular cuando se redimensiona la ventana
+    window.addEventListener('resize', () => {
+        map.invalidateSize();
+    });
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
     let marker = null;
 
@@ -81,6 +91,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         map.setView([data.lat, data.lng], 15);
         if (!marker) marker = L.marker([data.lat, data.lng]).addTo(map);
         else marker.setLatLng([data.lat, data.lng]);
+
+        latInput.value = data.lat;
+        lngInput.value = data.lng;
 
         if (data.calle) calleInput.value = data.calle;
     }
@@ -449,10 +462,10 @@ if (inputLogo && btnCambiarLogo && btnEliminarLogo && imgPreview) {
             return;
         }
 
-        // 2️⃣ Máximo 10 KB
-        const maxSize = 10 * 1024; // 10 KB
+        // 2️⃣ Máximo 40 KB
+        const maxSize = 4 * 10 * 1024; // 40 KB
         if (file.size > maxSize) {
-            alert("La imagen no puede superar los 10 KB.");
+            alert("La imagen no puede superar los 40 KB.");
             inputLogo.value = "";
             return;
         }

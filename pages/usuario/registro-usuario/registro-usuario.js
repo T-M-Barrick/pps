@@ -80,6 +80,12 @@ btnSiguiente.addEventListener("click", () => {
 
     seccionUsuario.classList.remove("activa");
     seccionDomicilio.classList.add("activa");
+
+    setTimeout(() => {
+        if (window.mapaLeaflet) {
+            window.mapaLeaflet.invalidateSize();
+        }
+    }, 1000);
     
     scrollTo({ top: 0, behavior: "smooth" });
 });

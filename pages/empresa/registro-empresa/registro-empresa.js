@@ -122,6 +122,12 @@ btnSiguiente.addEventListener("click", () => {
     seccionEmpresa.classList.remove("activa");
     seccionDomicilio.classList.add("activa");
 
+    setTimeout(() => {
+        if (window.mapaLeaflet) {
+            window.mapaLeaflet.invalidateSize();
+        }
+    }, 1000);
+
     scrollTo({ top: 0, behavior: "smooth" });
 });
 
@@ -220,10 +226,10 @@ if (inputLogo && btnSubir && imgPreview) {
             return;
         }
 
-        // 2️⃣ Máximo 10 KB
-        const maxSize = 10 * 1024; // 10 KB
+        // 2️⃣ Máximo 40 KB
+        const maxSize = 4 * 10 * 1024; // 40 KB
         if (file.size > maxSize) {
-            alert("La imagen no puede superar los 10 KB.");
+            alert("La imagen no puede superar los 40 KB.");
             inputLogo.value = "";
             return;
         }
