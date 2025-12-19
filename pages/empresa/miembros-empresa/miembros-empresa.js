@@ -33,6 +33,8 @@ async function cargarDatosDesdeBackend() {
             return;
         }
 
+        console.log(data.miembros)
+
         miembros = data.miembros;
 
         usuarioRol = data.rol
@@ -47,6 +49,7 @@ async function cargarDatosDesdeBackend() {
 
 // RENDER DE LISTA
 function renderizar(miembros, rol) {
+    console.log("renderizando miembros")
     listaEmpleados.innerHTML = "";
     const rolUsuario = rol;
 
