@@ -286,6 +286,11 @@ function actualizarPerfil() {
             const aclaracion = document.getElementById("datos_adicionales").value.trim();
             const telefono = document.getElementById("telefono").value.trim();
 
+            if (!lat || !lng) {
+                crearModal("Error", "Debe seleccionar la ubicación en el mapa.", "error");
+                return; // Detiene el envío
+            };
+
             const direccionObj = {
                 id: datosEmpresa?.direccion_id || 0,
                 calle: calle,

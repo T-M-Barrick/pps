@@ -256,6 +256,11 @@ function actualizarPerfil() {
             const telefono = document.getElementById("telefono").value.trim();
             const password = document.getElementById("clave").value.trim();
 
+            if (!lat || !lng) {
+                crearModal("Error", "Debe seleccionar la ubicación en el mapa.", "error");
+                return; // Detiene el envío
+            };
+
             const direccionObj = {
                 id: datosUsuario?.direccion_id,
                 calle: calle,

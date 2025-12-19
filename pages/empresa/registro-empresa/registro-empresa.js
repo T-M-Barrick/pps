@@ -39,7 +39,7 @@ async function registrarEmpresa(event) {
         if (!lat || !lng) {
             crearModal("Error", "Debe seleccionar la ubicación en el mapa.", "error");
             return; // Detiene el envío
-        }
+        };
 
         const direccionObj = {
             calle: calle,
