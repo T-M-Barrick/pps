@@ -311,7 +311,18 @@ function renderizarTarjetas() {
     }
 
     if (turnos.length === 0) {
-        contenedor.innerHTML = `<div style="text-align:center; padding:30px; color:#777;">No se encontraron turnos</div>`;
+        contenedor.innerHTML = `
+            <div style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 300px;
+                color: #777;
+                font-size: 16px;
+            ">
+                No se encontraron turnos
+            </div>
+        `;
         return;
     }
 

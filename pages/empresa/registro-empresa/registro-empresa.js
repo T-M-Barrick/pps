@@ -43,8 +43,8 @@ async function registrarEmpresa(event) {
             departamento: departamento,
             provincia: provincia,
             pais: "Argentina",
-            lat: parseFloat(lat),
-            lng: parseFloat(lng),
+            lat: lat,
+            lng: lng,
             aclaracion: aclaracion,
         };
 
@@ -55,7 +55,7 @@ async function registrarEmpresa(event) {
             rubro: rubro,
             rubro2: rubro2,
             telefonos: [parseInt(telefono)],
-            direcciones: [direccionObj],
+            direccion: direccionObj,
             logo: logoBase64
         };
 
