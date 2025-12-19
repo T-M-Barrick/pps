@@ -36,6 +36,11 @@ async function registrarEmpresa(event) {
         const aclaracion = document.getElementById("datos_adicionales").value.trim();
         const telefono = document.getElementById("telefono").value.trim();
 
+        if (!latValue || !lngValue) {
+            crearModal("Error", "Debe seleccionar la ubicación en el mapa.", "error");
+            return; // Detiene el envío
+        }
+
         const direccionObj = {
             calle: calle,
             altura: altura,
