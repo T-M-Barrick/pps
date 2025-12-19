@@ -183,8 +183,6 @@ function mostrarPaso(n) {
     };
     if (n === 2) {
         document.getElementById("paso-profesional").classList.remove("hidden");
-        servicioConProfesionalSeleccionado = null;
-        profesionalIndiferente = false;
     };
     if (n === 3) {
         document.getElementById("paso-hora").classList.remove("hidden");
@@ -281,6 +279,9 @@ window.seleccionarServicioGrupo = (index, e) => {
     const grupo = window._gruposServicios[index];
 
     serviciosSeleccionados = grupo; // ahora es un ARRAY
+
+    servicioConProfesionalSeleccionado = null;
+    profesionalIndiferente = false;
     document.getElementById("btnSiguienteServicio").disabled = false;
 };
 
@@ -315,9 +316,10 @@ window.seleccionarProfesional = (id, e) => {
     document.querySelectorAll(".tarjeta-profesional").forEach(c => c.classList.remove("seleccionado"));
 
     e.currentTarget.classList.add("seleccionado");
-    profesionalIndiferente = false;
 
     servicioConProfesionalSeleccionado = serviciosSeleccionados.find(s => s.id === id);
+    profesionalIndiferente = false;
+
     document.getElementById("btnSiguienteProfesional").disabled = false;
 };
 
