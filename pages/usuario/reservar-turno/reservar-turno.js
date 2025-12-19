@@ -41,6 +41,10 @@ function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
     );
 }
 function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
+    console.log("🧪 Servicio:", servicio.nombre);
+    console.log("Profesional ID:", servicio.profesional_id);
+    console.log("Disponibilidades:", servicio.disponibilidades);
+    console.log("Turnos actuales:", servicio.turnos_actuales);
     const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
     const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
 
@@ -577,7 +581,7 @@ window.cerrarModalReserva = function (irAMisTurnos = false) {
 
 async function aceptarTurno() {
     const turno = {
-        empresa_id: empresaId.id, // asumiendo que tienes la empresa seleccionada
+        empresa_id: empresaId, // asumiendo que tienes la empresa seleccionada
         fecha_hora: new Date(`${fechaSeleccionada}T${horaSeleccionada}`), // datetime completo
         servicio_id: servicioConProfesionalSeleccionado?.id || serviciosSeleccionados[0]?.id,
         profesional_id: profesionalIndiferente ? 0 : (servicioConProfesionalSeleccionado?.profesional_id || null)
