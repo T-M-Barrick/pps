@@ -287,20 +287,20 @@ function actualizarPerfil() {
                 if (!datosUsuario.telefono.length) {
                     telefonosPayload = null
                 }
-            }
+            };
 
             let payload = {
-                dni,
-                apellido,
-                nombre,
-                email,
+                dni: dni,
+                apellido: apellido,
+                nombre: nombre,
+                email: email,
                 telefonos: telefonosPayload,
                 direcciones: [direccionObj]
             };
 
             if (password && password.length > 0) {
                 payload.password = password;
-            }
+            };
 
             const respuesta = await fetch(`${BACKEND_URL}/users/me`, {
                 method: "PUT",
@@ -316,16 +316,14 @@ function actualizarPerfil() {
                 return;
             }
 
-            const usuario = data
-
             sessionStorage.setItem("usuario", JSON.stringify({
-                id: usuario.id,
-                dni: usuario.dni,
-                apellido: usuario.apellido,
-                nombre: usuario.nombre,
-                email: usuario.email,
-                telefonos: usuario.telefonos,
-                direcciones: usuario.direcciones
+                id: data.id,
+                dni: data.dni,
+                apellido: data.apellido,
+                nombre: data.nombre,
+                email: data.email,
+                telefonos: data.telefonos,
+                direcciones: data.direcciones
             }));
 
             alert("Perfil actualizado con éxito ✓");
