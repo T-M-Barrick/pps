@@ -1,4 +1,4 @@
-export const BACKEND_URL = "https://miturno.up.railway.app";
+export const BACKEND_URL = "https://miturnoproduction.up.railway.app";
 
 export async function manejarErrorRespuesta(resp, defaultMsg = "Error inesperado") {
     const data = await resp.json().catch(() => null);
