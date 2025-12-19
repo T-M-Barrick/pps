@@ -1,3 +1,5 @@
+import { BACKEND_URL } from "../../../config.js";
+
 const seccionEmpresa = document.getElementById("seccion-empresa");
 const seccionDomicilio = document.getElementById("seccion-domicilio");
 const btnSiguiente = document.getElementById("btn-siguiente");
