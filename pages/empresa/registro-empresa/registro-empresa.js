@@ -90,7 +90,7 @@ async function registrarEmpresa(event) {
             "success",
             () => {
                 sessionStorage.setItem("empresa_activa_id", data.empresa_id);
-                window.location.href = `../home-empresa/home-empresa.html`;
+                window.location.href = `../../usuario/mis-empresas/mis-empresas.html`;
             }
         );
 
