@@ -56,21 +56,7 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
         return turnosEnHora < d.cant_max_turnos &&
                !estaHoraOcupada(fechaSeleccionada, d.hora, rangosOcupados, servicio.duracion);
     });
-}
-
-function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
-    const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
-    const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
-
-    return disponibilidadesDia.filter(d =>
-        !estaHoraOcupada(
-            fechaSeleccionada,
-            d.hora,
-            rangosOcupados,
-            servicio.duracion
-        )
-    );
-}
+};
 
 function calcularHorariosCualquiera(servicios, fechaSeleccionada) {
     const horasSet = new Set();
@@ -87,7 +73,7 @@ function calcularHorariosCualquiera(servicios, fechaSeleccionada) {
     return Array.from(horasSet)
         .sort()
         .map(hora => ({ hora }));
-}
+};
 
 /* ============================================================
    INICIALIZAR
