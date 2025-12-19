@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
             contEmpresas.style.display = "none";
             contTurnos.style.display = "grid";
             contFiltros.style.display = "flex";
-            renderizarTarjetas();
+            mostrarEmpresas();
             return;
         }
     });
