@@ -224,7 +224,18 @@ window.siguientePaso = function () {
 };
 
 window.pasoAnterior = function () {
-    if (pasoActual > 1) mostrarPaso(pasoActual - 1);
+    if (pasoActual === 3) {
+        // Si NO hubo elección de profesional → volver a servicios
+        if (!serviciosSeleccionados || serviciosSeleccionados.length === 1) {
+            mostrarPaso(1);
+            return;
+        }
+    }
+
+    if (pasoActual > 1) {
+        mostrarPaso(pasoActual - 1);
+    }
+
 };
 
 /* ============================================================
@@ -357,23 +368,23 @@ function generarDiasCalendario() {
         // Chequeamos si hay al menos un horario disponible para esta fecha y que respete cant_max_turnos
         let tieneHorarios = false;
 
-        if (profesionalIndiferente) {
+        if (profesionalIndiferente && serviciosSeleccionados) {
             // Si el usuario eligió "cualquier profesional", calculamos los horarios combinados
             const horarios = calcularHorariosCualquiera(serviciosSeleccionados, iso);
             if (horarios.length > 0) {
                 tieneHorarios = true;
             }
         } else if (servicioConProfesionalSeleccionado) {
-            // Si eligió un profesional específico, usamos solo ese servicio
+            // Si eligió un profesional específico o un servicio sin profesional, usamos solo ese servicio
             const horarios = calcularHorariosDisponibles(servicioConProfesionalSeleccionado, iso);
             if (horarios.length > 0) {
                 tieneHorarios = true;
             }
-        }
+        };
 
         disponibilidadDias[iso] = tieneHorarios;
 
-    maxSemana = Math.ceil(diasCalendario.length / 7) - 1;  
+        maxSemana = Math.ceil(diasCalendario.length / 7) - 1;  
     }
 };
 
