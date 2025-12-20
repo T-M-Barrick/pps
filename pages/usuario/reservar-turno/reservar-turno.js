@@ -408,11 +408,7 @@ function generarDiasCalendario() {
             }
         } else if (servicioConProfesionalSeleccionado) {
             console.log("🟢 Calculando horarios SERVICIO ÚNICO / PROFESIONAL");
-            console.log("👉 Servicio usado:",
-                profesionalIndiferente
-                    ? serviciosSeleccionados
-                    : servicioConProfesionalSeleccionado
-            );
+            console.log("👉 Servicio usado:", servicioConProfesionalSeleccionado);
             // Si eligió un profesional específico o un servicio sin profesional, usamos solo ese servicio
             const horarios = calcularHorariosDisponibles(servicioConProfesionalSeleccionado, iso);
             if (horarios.length > 0) {
