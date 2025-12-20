@@ -5,11 +5,16 @@ const empresaId = Number(params.get("id"));
 
 // Obtener empresas desde sessionStorage
 const empresasStorage = JSON.parse(sessionStorage.getItem("empresas")) || [];
+let favoritos = JSON.parse(sessionStorage.getItem("favoritos")) || [];
 
-// Buscar la empresa por id
-const empresaStorage = empresasStorage.find(e => e.id === empresaId) || null;
+// Buscar empresa primero en empresas, luego en favoritos
+let empresaStorage =
+    empresasStorage.find(e => e.id === empresaId) ||
+    favoritos.find(e => e.id === empresaId) ||
+    null;
 
-const empresa = adaptarEmpresa(empresaStorage)
+// Adaptar solo si existe
+const empresa = empresaStorage ? adaptarEmpresa(empresaStorage) : null;
 
 if (!empresa) {
     console.warn("No se encontró la empresa en sessionStorage:", empresaId);
@@ -64,10 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href =
                     `../reservar-turno/reservar-turno.html?id=${empresaId}`;
             };
-        }
-
-        // FAVORITOS
-        let favoritos = JSON.parse(sessionStorage.getItem("favoritos")) || [];
+        };
 
         function estaEnFavoritos(id) {
             return favoritos.some(f => f.id === id);
