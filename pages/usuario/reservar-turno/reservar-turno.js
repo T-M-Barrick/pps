@@ -36,6 +36,9 @@ function obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada) {
             .toLocaleDateString("es-AR", { weekday: "long" })
     );
 
+    console.log("Dia calculado:", diaSemana);
+    console.log("Disponibilidades del servicio:", servicio.disponibilidades.map(d => normalizarDia(d.dia)));
+
     return servicio.disponibilidades.filter(d =>
         normalizarDia(d.dia) === diaSemana
     );
