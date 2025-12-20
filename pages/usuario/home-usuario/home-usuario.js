@@ -148,10 +148,12 @@ function calcularTiempoRestante(fechaHoraISO, duracionMinutos) {
     if (!fechaHoraISO) return "—";
 
     const inicioLocal = new Date(fechaHoraISO);
+    console.log('fecha en tiempo restante de iniciolocal', inicioLocal)
     const inicioUTC = inicioLocal.getTime() + (inicioLocal.getTimezoneOffset() * 60000);
     const finUTC = inicioUTC + (duracionMinutos ?? 0) * 60000;
 
     const ahoraUTC = Date.now();
+    console.log('horas utc', inicioLocal, inicioUTC, ahoraUTC, finUTC)
 
     // Si ya terminó el turno
     if (ahoraUTC > finUTC) return "Vencido";
