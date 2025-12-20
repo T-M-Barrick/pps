@@ -54,12 +54,15 @@ function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
     );
 }
 function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
+    console.log("🚀 calcularHorariosDisponibles EJECUTADO");
+    console.log("servicio recibido:", servicio);
     console.log("🧪 Servicio:", servicio.nombre);
     console.log("Profesional ID:", servicio.profesional_id);
     console.log("Disponibilidades:", servicio.disponibilidades);
     console.log("Turnos actuales:", servicio.turnos_actuales);
     const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
     const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
+    console.log("📦 disponibilidades del día:", disponibilidadesDia);
 
     return disponibilidadesDia.filter(d => {
         // Contamos cuántos turnos ya hay en esta fecha y hora
@@ -188,6 +191,7 @@ function actualizarIndicadorPasos() {
 }
 
 function mostrarPaso(n) {
+    console.log("➡️ mostrarPaso:", n);
     pasoActual = n;
     document.querySelectorAll("section[id^='paso-']").forEach(sec => sec.classList.add("hidden"));
 
@@ -202,6 +206,10 @@ function mostrarPaso(n) {
         document.getElementById("paso-profesional").classList.remove("hidden");
     };
     if (n === 3) {
+        console.log("📅 Entrando a paso 3");
+        console.log("serviciosSeleccionados:", serviciosSeleccionados);
+        console.log("servicioConProfesionalSeleccionado:", servicioConProfesionalSeleccionado);
+        console.log("profesionalIndiferente:", profesionalIndiferente);
         document.getElementById("paso-hora").classList.remove("hidden");
         fechaSeleccionada = null;
         horaSeleccionada = null;
@@ -369,6 +377,10 @@ function generarDiasCalendario() {
     disponibilidadDias = {};
 
     for (let i = 0; i < 56; i++) {  // 56 días
+        console.log("🗓️ evaluando fecha:", iso);
+        console.log("profesionalIndiferente:", profesionalIndiferente);
+        console.log("serviciosSeleccionados:", serviciosSeleccionados);
+        console.log("servicioConProfesionalSeleccionado:", servicioConProfesionalSeleccionado);
         const fecha = new Date(hoy);
         fecha.setDate(hoy.getDate() + i);
 
@@ -388,12 +400,19 @@ function generarDiasCalendario() {
         let tieneHorarios = false;
 
         if (profesionalIndiferente && serviciosSeleccionados) {
+            console.log("🟡 Calculando horarios CUALQUIERA");
             // Si el usuario eligió "cualquier profesional", calculamos los horarios combinados
             const horarios = calcularHorariosCualquiera(serviciosSeleccionados, iso);
             if (horarios.length > 0) {
                 tieneHorarios = true;
             }
         } else if (servicioConProfesionalSeleccionado) {
+            console.log("🟢 Calculando horarios SERVICIO ÚNICO / PROFESIONAL");
+            console.log("👉 Servicio usado:",
+                profesionalIndiferente
+                    ? serviciosSeleccionados
+                    : servicioConProfesionalSeleccionado
+            );
             // Si eligió un profesional específico o un servicio sin profesional, usamos solo ese servicio
             const horarios = calcularHorariosDisponibles(servicioConProfesionalSeleccionado, iso);
             if (horarios.length > 0) {
