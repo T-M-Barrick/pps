@@ -314,6 +314,17 @@ function adaptarHorariosDesdeBackend(listaDisponibilidades) {
     return horarios;
 };
 
+const MAPA_DIAS_BACKEND = {
+    Lun: "lunes",
+    Mar: "martes",
+    "Mié": "miércoles",
+    Jue: "jueves",
+    Vie: "viernes",
+    "Sáb": "sábado",
+    Dom: "domingo"
+};
+
+
 function adaptarHorariosParaBackend(horariosUI) {
     const lista = [];
 
@@ -343,7 +354,7 @@ function adaptarHorariosParaBackend(horariosUI) {
             );
 
             lista.push({
-                dia: dia,
+                dia: MAPA_DIAS_BACKEND[dia], // va "lunes", "martes", etc.
                 hora_inicio: `${int.desde}:00`,
                 hora_fin: `${int.hasta}:00`,
                 intervalo: int.int,

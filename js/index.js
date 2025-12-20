@@ -40,9 +40,11 @@ export function crearCuenta() {
     window.location.href = './pages/usuario/registro-usuario/registro-usuario.html';
 }
 
+/*
 export function entrarConGoogle() {
     console.log("Entrar con Google");
 }
+*/
 
 /* ============================================================
    ===================== LOGIN REAL ============================

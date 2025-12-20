@@ -25,11 +25,7 @@ function obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada) {
     const diaSemana = new Date(year, month-1, day)
         .toLocaleDateString("es-AR", { weekday: "long" }); // "lunes"
     
-    //return servicio.disponibilidades.filter(d => d.dia === diaSemana);
-    return servicio.disponibilidades.filter(d => {
-        console.log("comparando:", d.dia, "vs", diaSemana);
-        return d.dia === diaSemana;
-    });
+    return servicio.disponibilidades.filter(d => d.dia === diaSemana);
 };
 
 function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
@@ -45,10 +41,6 @@ function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
     );
 }
 function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
-    console.log("🧪 Servicio:", servicio.nombre);
-    console.log("Profesional ID:", servicio.profesional_id);
-    console.log("Disponibilidades:", servicio.disponibilidades);
-    console.log("Turnos actuales:", servicio.turnos_actuales);
     const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
     const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
 
