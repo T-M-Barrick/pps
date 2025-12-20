@@ -80,6 +80,7 @@ function renderizarHistorial(historial) {
 
 // COLOR POR ESTADO 
 function getEstadoClase(estado) {
+    if (!estado) return "";
     const e = estado.toLowerCase().trim();
 
     if (e === "cumplido") return "cumplido";
