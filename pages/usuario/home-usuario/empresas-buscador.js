@@ -61,9 +61,10 @@ function adaptarEmpresa(emp) {
 
 //   CREAR TARJETA DE EMPRESA
 function crearCardEmpresa(emp) {
+    const calificacion = emp.calificacion / 2;
 
-    let fullStars = Math.floor(emp.calificacion);
-    let halfStar = emp.calificacion % 1 >= 0.5;
+    let fullStars = Math.floor(calificacion);
+    let halfStar = calificacion % 1 >= 0.5;
     let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
     let estrellasHTML = '';
@@ -87,12 +88,12 @@ function crearCardEmpresa(emp) {
 
                 <div class="empresa-rating">
                     ${estrellasHTML}
-                    <span class="rating-num">${emp.calificacion.toFixed(1)}</span>
+                    <span class="rating-num">${calificacion.toFixed(1)}</span>
                 </div>
             </div>
         </div>
     `;
-}
+};
 
 // Función que hace la búsqueda de empresas
 async function ejecutarBusqueda() {
