@@ -84,8 +84,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnCumplido.onclick = async () => {
         if (!turnoSeleccionado) return;
 
-        f = turnoSeleccionado.fechaOriginal;
-        dur = turnoSeleccionado.duracion;
+        const f = turnoSeleccionado.fechaOriginal;
+        const dur = turnoSeleccionado.duracion;
 
         if (calcularTiempoRestante(f, dur) !== "Vencido") return;
 
@@ -108,8 +108,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnNoCumplido.onclick = async () => {
         if (!turnoSeleccionado) return;
 
-        f = turnoSeleccionado.fechaOriginal;
-        dur = turnoSeleccionado.duracion;
+        const f = turnoSeleccionado.fechaOriginal;
+        const dur = turnoSeleccionado.duracion;
 
         if (calcularTiempoRestante(f, dur) !== "Vencido") return;
 
@@ -132,8 +132,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnCancelarTurno.onclick = async () => {
         if (!turnoSeleccionado) return;
 
-        f = turnoSeleccionado.fechaOriginal;
-        dur = turnoSeleccionado.duracion;
+        const f = turnoSeleccionado.fechaOriginal;
+        const dur = turnoSeleccionado.duracion;
 
         if (calcularTiempoRestante(f, dur) === "En hora" || calcularTiempoRestante(f, dur) === "Vencido") return;
 
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (turnoSeleccionado.estado === "confirmado") {
                 return;
-            }
+            };
 
             const idEliminado = await eliminarTurno(turnoSeleccionado.id);
             if (!idEliminado) return;

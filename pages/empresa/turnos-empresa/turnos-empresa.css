@@ -103,6 +103,9 @@ body {
 .badge.cancelado { background: #ffebee; color: #E53935; }
 .turno-card.cancelado { border-left-color: #E53935; }
 
+.badge.vencido { background: #555; color: white; }
+.turno-card.vencido { border-left-color: white; }
+
 /* BOTÓN DETALLE */
 .btn-detalle {
     margin-top: 12px;
