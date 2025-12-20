@@ -113,7 +113,8 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
 
         // Agregamos solo si hay espacio
         const puedeReservar = turnosEnHora < Number(disponibilidad.cant_max_turnos); // && !ocupada;
-        console.log("se puede reservar?", puedeReservar);
+
+        console.log("se puede reservar?", puedeReservar, turnosEnHora, disponibilidad.cant_max_turnos);
         if (puedeReservar) {
             console.log(disponibilidad);
             horariosDisponibles.push(disponibilidad);
