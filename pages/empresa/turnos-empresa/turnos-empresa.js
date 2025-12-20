@@ -84,6 +84,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnCumplido.onclick = async () => {
         if (!turnoSeleccionado) return;
 
+        if (calcularTiempoRestante(f, dur) !== "Vencido") return;
+
         const turnoActualizado = await actualizarEstadoTurno(
             turnoSeleccionado.id,
             "cumplido"
@@ -102,6 +104,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     btnNoCumplido.onclick = async () => {
         if (!turnoSeleccionado) return;
+
+        if (calcularTiempoRestante(f, dur) !== "Vencido") return;
 
         const turnoActualizado = await actualizarEstadoTurno(
             turnoSeleccionado.id,

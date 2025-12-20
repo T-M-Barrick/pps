@@ -441,6 +441,7 @@ function mostrarDetalleTurno(id) {
     if (turno.profesional_apellido) {
         profesionalMostrado = `${turno.profesional_apellido}, ${turno.profesional_nombre}`
     };
+    const aclaracionMostrada = turno.aclaracion_de_direccion || '—';
 
     // BOTONES SEGÚN ESTADO
     let botones = `
@@ -490,7 +491,7 @@ function mostrarDetalleTurno(id) {
             <span>
                 ${armarDomicilio(turno)}
             </span>
-            <span>${turno.aclaracion_de_direccion}</span>
+            <span>${aclaracionMostrada}</span>
         </div>
 
         <div class="modal-row">
@@ -531,10 +532,12 @@ function mostrarDetalleTurno(id) {
 
     // eventos
     body.querySelector(".btn-cumplido").onclick = async () => {
+        if (calcularTiempoRestante(f, dur) !== "Vencido") return;
         abrirModalCalificacion(id);
     };
 
     body.querySelector(".btn-no-cumplido").onclick = async () => {
+        if (calcularTiempoRestante(f, dur) !== "Vencido") return;
         const turnoActualizado = await actualizarEstadoTurno(turno.id, "no cumplido");
         if (!turnoActualizado) return;
 
