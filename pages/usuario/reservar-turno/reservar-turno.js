@@ -18,14 +18,27 @@ function obtenerRangosOcupados(turnosActuales) {
         inicio: t.inicio,
         fin: t.fin
     }));
-}
+};
+
+function normalizarDia(dia) {
+    return dia
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+};
 
 function obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada) {
     const [year, month, day] = fechaSeleccionada.split("-").map(Number);
-    const diaSemana = new Date(year, month-1, day)
-        .toLocaleDateString("es-AR", { weekday: "long" }); // "lunes"
-    
-    return servicio.disponibilidades.filter(d => d.dia === diaSemana);
+
+    const diaSemana = normalizarDia(
+        new Date(year, month - 1, day)
+            .toLocaleDateString("es-AR", { weekday: "long" })
+    );
+
+    return servicio.disponibilidades.filter(d =>
+        normalizarDia(d.dia) === diaSemana
+    );
 };
 
 function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
