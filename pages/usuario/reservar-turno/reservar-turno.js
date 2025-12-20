@@ -81,7 +81,7 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
         const ocupada = estaHoraOcupada(fechaSeleccionada, d.hora, rangosOcupados, servicio.duracion);
         console.log("Está ocupada?", ocupada);
 
-        return turnosEnHora < d.cant_max_turnos && !ocupada;
+        return turnosEnHora < Number(d.cant_max_turnos) && !ocupada;
     });
 };
 
