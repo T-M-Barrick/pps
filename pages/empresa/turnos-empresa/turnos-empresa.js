@@ -5,7 +5,7 @@ const empresaId = sessionStorage.getItem("empresa_activa_id");
 if (!empresaId) {
     // No hay empresa seleccionada → redirigir
     window.location.href = "../../usuario/mis-empresas/mis-empresas.html";
-}
+};
 
 // ========================================
 //         CONFIGURACIÓN DE ESTADOS

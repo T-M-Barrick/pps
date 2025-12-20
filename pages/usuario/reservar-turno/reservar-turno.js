@@ -98,6 +98,13 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
     const horariosDisponibles = [];
 
     for (const disponibilidad of disponibilidadesDia) {
+
+        // ⏰ BLOQUEO TURNOS PASADOS
+        const [y, m, d] = fechaSeleccionada.split("-").map(Number);
+        const [hh, mm] = disponibilidad.hora.split(":").map(Number);
+        const fechaHoraTurno = new Date(y, m - 1, d, hh, mm);
+
+        if (fechaHoraTurno <= new Date()) continue;
         // Contamos cuántos turnos ya hay en esta fecha y hora
         const turnosEnHora = servicio.turnos_actuales.filter(t => {
             const y = t.inicio.getFullYear();
