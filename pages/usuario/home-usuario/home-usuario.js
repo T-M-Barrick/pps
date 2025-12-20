@@ -56,6 +56,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 3️⃣ Renderizar todas las tarjetas al cargar la página
     renderizarTarjetas(); // llamada al cargar la página
+
+    document.getElementById("btnCerrarModal").addEventListener("click", () => {
+        cerrarDetalleTurno();
+    });
+    document.getElementById("btnCerrarCalif").addEventListener("click", () => {
+        cerrarCalificacion();
+    });
+
 });
 
 // ========================================
@@ -308,23 +316,20 @@ function renderizarTarjetas() {
     if (estadoApp.filtroActivo === "hoy") {
         const hoy = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
         turnos = turnos.filter(t => t.fechaOriginal.split("T")[0] === hoy);
-    }
-
+    };
     if (turnos.length === 0) {
+        // 👇 Agregar clase
+        contenedor.classList.add('vacio');
+
         contenedor.innerHTML = `
-            <div style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 300px;
-                color: #777;
-                font-size: 16px;
-            ">
-                No se encontraron turnos
-            </div>
-        `;
+        <div class="mensaje-vacio">
+            No se encontraron turnos
+        </div>
+    `;
         return;
     }
+
+    contenedor.classList.remove('vacio');
 
     turnos.forEach(t => renderizarTarjeta(t));
 }
@@ -412,6 +417,11 @@ function mostrarDetalleTurno(id) {
     const estado = configuracionEstado[turno.estado];
     const precioMostrado = turno.precio || '—';
 
+    let profesionalMostrado = '—';
+    if (turno.profesional_apellido) {
+        profesionalMostrado = `${turno.profesional_apellido}, ${turno.profesional_nombre}`
+    };
+
     // BOTONES SEGÚN ESTADO
     let botones = `
     <button class="btn-small btn-cumplido">Cumplido</button>
@@ -459,7 +469,6 @@ function mostrarDetalleTurno(id) {
             <i class="fas fa-map-marker-alt"></i>
             <span>
                 ${armarDomicilio(turno)}
-                <a href="#" onclick="mostrarUbicacion('${turno.lat}', '${turno.lng}')" class="modal-ver-direccion">Ver Dirección</a>
             </span>
             <span>${turno.aclaracion_de_direccion}</span>
         </div>
@@ -471,7 +480,7 @@ function mostrarDetalleTurno(id) {
 
         <div class="modal-row">
             <i class="fas fa-user-tie"></i>
-            <span>Profesional: ${turno.profesional_apellido}, ${turno.profesional_nombre}</span>
+            <span>Profesional: ${profesionalMostrado}</span>
         </div>
 
         <div class="modal-row">

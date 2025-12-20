@@ -637,21 +637,23 @@ window.mostrarModalReserva = function () {
     const servicio = servicioConProfesionalSeleccionado 
                      || (serviciosSeleccionados && serviciosSeleccionados[0]); // tomamos uno representativo
 
-    let profesionalTexto = "";
+    let profesionalTexto = '—';
     if (profesionalIndiferente) {
         profesionalTexto = "Cualquiera disponible";
-    } else if (servicio.profesional_apellido) {
+    };
+    if (servicio.profesional_apellido) {
         profesionalTexto = `${servicio.profesional_apellido}, ${servicio.profesional_nombre}`;
-    }
+    };
+
     const fecha = formatearFecha(fechaSeleccionada);
 
     document.getElementById("modalReserva").style.display = "flex";
 
-    document.getElementById("modal-resumen-servicio").textContent = servicio?.nombre || "-";
+    document.getElementById("modal-resumen-servicio").textContent = servicio?.nombre || '—';
     document.getElementById("modal-resumen-profesional").textContent = profesionalTexto;
     document.getElementById("modal-resumen-fechahora").textContent =
         `${fecha} - ${horaSeleccionada}`;
-    document.getElementById("precioConfirmado").textContent = servicio?.precio ? `$ ${servicio.precio}` : "-";
+    document.getElementById("precioConfirmado").textContent = servicio?.precio ? `$ ${servicio.precio}` : '—';
 };
 
 window.cerrarModalReserva = function (irAMisTurnos = false) {
