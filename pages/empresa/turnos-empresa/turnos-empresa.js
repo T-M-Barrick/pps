@@ -84,6 +84,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnCumplido.onclick = async () => {
         if (!turnoSeleccionado) return;
 
+        f = turnoSeleccionado.fechaOriginal;
+        dur = turnoSeleccionado.duracion;
+
         if (calcularTiempoRestante(f, dur) !== "Vencido") return;
 
         const turnoActualizado = await actualizarEstadoTurno(
@@ -105,6 +108,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnNoCumplido.onclick = async () => {
         if (!turnoSeleccionado) return;
 
+        f = turnoSeleccionado.fechaOriginal;
+        dur = turnoSeleccionado.duracion;
+
         if (calcularTiempoRestante(f, dur) !== "Vencido") return;
 
         const turnoActualizado = await actualizarEstadoTurno(
@@ -125,9 +131,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     btnCancelarTurno.onclick = async () => {
         if (!turnoSeleccionado) return;
-        f = turnoSeleccionado.fechaOriginal
-        console.log('fecha en tiempo restante', fechaOriginal)
-        dur = turnoSeleccionado.duracion
+
+        f = turnoSeleccionado.fechaOriginal;
+        dur = turnoSeleccionado.duracion;
 
         if (calcularTiempoRestante(f, dur) === "En hora" || calcularTiempoRestante(f, dur) === "Vencido") return;
 

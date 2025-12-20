@@ -532,12 +532,12 @@ function mostrarDetalleTurno(id) {
 
     // eventos
     body.querySelector(".btn-cumplido").onclick = async () => {
-        if (calcularTiempoRestante(f, dur) !== "Vencido") return;
+        if (turno.tiempoRestante !== "Vencido") return;
         abrirModalCalificacion(id);
     };
 
     body.querySelector(".btn-no-cumplido").onclick = async () => {
-        if (calcularTiempoRestante(f, dur) !== "Vencido") return;
+        if (turno.tiempoRestante !== "Vencido") return;
         const turnoActualizado = await actualizarEstadoTurno(turno.id, "no cumplido");
         if (!turnoActualizado) return;
 
