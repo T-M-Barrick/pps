@@ -41,6 +41,10 @@ function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
     );
 }
 function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
+    console.log("🧪 Servicio:", servicio.nombre);
+    console.log("Profesional ID:", servicio.profesional_id);
+    console.log("Disponibilidades:", servicio.disponibilidades);
+    console.log("Turnos actuales:", servicio.turnos_actuales);
     const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
     const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
 
