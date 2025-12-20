@@ -1,4 +1,4 @@
-import { BACKEND_URL, manejarErrorRespuesta, formatearFecha } from "../../../config.js";
+import { BACKEND_URL, manejarErrorRespuesta, formatearFecha, formatearHora } from "../../../config.js";
 
 const empresaId = sessionStorage.getItem("empresa_activa_id");
 
@@ -226,18 +226,6 @@ function renderTurnos(lista) {
     });
 }
 
-function formatearHora(fechaISO) {
-    const normalizada = fechaISO.replace(/\//g, "-");
-    const fecha = new Date(normalizada);
-
-    if (isNaN(fecha)) return "—";
-
-    const horas = String(fecha.getHours()).padStart(2, "0");
-    const minutos = String(fecha.getMinutes()).padStart(2, "0");
-
-    return `${horas}:${minutos}`;
-}
-
 // ========== FILTROS ==========
 function aplicarFiltros(filtFecha, filtEstado, filtProf) {
     let lista = [...datosTurnos];
@@ -332,12 +320,19 @@ function mostrarDetalleTurno(turno) {
 function turnoEstaVencido(fechaHoraISO, duracionMinutos) {
     if (!fechaHoraISO) return false;
 
-    const inicio = new Date(fechaHoraISO);
-    const fin = new Date(inicio.getTime() + (duracionMinutos ?? 0) * 60000);
-    const ahora = new Date();
+    // Convertimos la fecha "tal cual llega" a Date
+    const inicioLocal = new Date(fechaHoraISO);
 
-    return ahora > fin; 
-}
+    // Convertimos a milisegundos UTC sumando la diferencia de zona
+    const inicioUTC = inicioLocal.getTime() + (inicioLocal.getTimezoneOffset() * 60000);
+
+    const finUTC = inicioUTC + (duracionMinutos ?? 0) * 60000;
+
+    // Ahora en UTC
+    const ahoraUTC = Date.now();
+
+    return ahoraUTC > finUTC;
+};
 
 // ==============================
 //  ADAPTAR TURNO PARA EL FRONT
@@ -472,21 +467,25 @@ async function eliminarTurno(id) {
         alert("Hubo un error eliminando el turno.");
         return null;
     }
-}
+};
 
 function calcularTiempoRestante(fechaHoraISO, duracionMinutos) {
-    const inicio = new Date(fechaHoraISO);
-    const fin = new Date(inicio.getTime() + (duracionMinutos ?? 0) * 60000);
-    const ahora = new Date();
+    if (!fechaHoraISO) return "—";
+
+    const inicioLocal = new Date(fechaHoraISO);
+    const inicioUTC = inicioLocal.getTime() + (inicioLocal.getTimezoneOffset() * 60000);
+    const finUTC = inicioUTC + (duracionMinutos ?? 0) * 60000;
+
+    const ahoraUTC = Date.now();
 
     // Si ya terminó el turno
-    if (ahora > fin) return "Vencido";
+    if (ahoraUTC > finUTC) return "Vencido";
 
     // Si ya empezó pero aún no terminó
-    if (ahora >= inicio) return "En hora";
+    if (ahoraUTC >= inicioUTC) return "En hora";
 
     // Faltan X segundos para que empiece
-    let diffSeg = Math.floor((inicio - ahora) / 1000);
+    let diffSeg = Math.floor((inicioUTC - ahoraUTC) / 1000);
 
     // Si falta menos de 1 minuto
     if (diffSeg < 60) return "Falta 1 minuto";

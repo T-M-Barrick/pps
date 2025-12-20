@@ -55,7 +55,7 @@ function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
     return rangosOcupados.some(r =>
         inicio < r.fin && fin > r.inicio
     );
-}
+};
 /*
 function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
     console.log("🚀 calcularHorariosDisponibles EJECUTADO");
@@ -432,7 +432,11 @@ function generarDiasCalendario() {
         const fecha = new Date(hoy);
         fecha.setDate(hoy.getDate() + i);
 
-        const iso = fecha.toISOString().split("T")[0];
+        const year = fecha.getFullYear();
+        const month = String(fecha.getMonth() + 1).padStart(2, "0");
+        const day = String(fecha.getDate()).padStart(2, "0");
+        const iso = `${year}-${month}-${day}`;
+
         console.log("🗓️ evaluando fecha:", iso);
 
         const diaSemana = fecha.toLocaleString("es-ES", { weekday: "short" }).toUpperCase();
@@ -667,7 +671,7 @@ window.cerrarModalReserva = function (irAMisTurnos = false) {
 async function aceptarTurno() {
     const turno = {
         empresa_id: empresaId, // asumiendo que tienes la empresa seleccionada
-        fecha_hora: new Date(`${fechaSeleccionada}T${horaSeleccionada}`), // datetime completo
+        fecha_hora: `${fechaSeleccionada}T${horaSeleccionada}`, // datetime completo
         servicio_id: servicioConProfesionalSeleccionado?.id || serviciosSeleccionados[0]?.id,
         profesional_id: profesionalIndiferente ? 0 : (servicioConProfesionalSeleccionado?.profesional_id || null)
     };

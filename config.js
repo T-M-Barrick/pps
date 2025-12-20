@@ -15,13 +15,14 @@ export async function manejarErrorRespuesta(resp, defaultMsg = "Error inesperado
 export function formatearFecha(fechaISO) {
     if (!fechaISO) return "—";
 
-    const fecha = new Date(fechaISO);
+    // Tomar solo fecha, ignorando la zona
+    const [year, month, day] = fechaISO.split("T")[0].split("-").map(Number);
+    return `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
+};
 
-    if (isNaN(fecha)) return "—";
-
-    const dia = String(fecha.getDate()).padStart(2, "0");
-    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
-    const año = fecha.getFullYear();
-
-    return `${dia}/${mes}/${año}`;
-}
+export async function formatearHora(fechaISO) {
+    if (!fechaISO) return "—";
+    const partes = fechaISO.split("T");
+    if (partes.length < 2) return "—";
+    return partes[1].slice(0, 5); // HH:MM
+};
