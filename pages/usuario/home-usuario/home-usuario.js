@@ -441,7 +441,8 @@ function mostrarDetalleTurno(id) {
     if (turno.profesional_apellido) {
         profesionalMostrado = `${turno.profesional_apellido}, ${turno.profesional_nombre}`
     };
-    const aclaracionMostrada = turno.aclaracion_de_direccion || '—';
+    const aclaracionDireccionMostrada = turno.aclaracion_de_direccion || '—';
+    const aclaracionServicioMostrada = turno.aclaracion_de_servicio || '—';
 
     // BOTONES SEGÚN ESTADO
     let botones = `
@@ -491,7 +492,7 @@ function mostrarDetalleTurno(id) {
             <span>
                 ${armarDomicilio(turno)}
             </span>
-            <span>${aclaracionMostrada}</span>
+            <span>${aclaracionDireccionMostrada}</span>
         </div>
 
         <div class="modal-row">
@@ -523,7 +524,7 @@ function mostrarDetalleTurno(id) {
 
 </div>
 
-        <p class="modal-detalle">${turno.aclaracion_de_servicio}</p>
+        <p class="modal-detalle">${aclaracionServicioMostrada}</p>
 
         <div class="modal-buttons">
             ${botones}
@@ -668,7 +669,19 @@ async function actualizarEstadosTurnos() {
         estados.forEach(est => {
             const idx = datosTurnos.findIndex(t => t.id === est.id);
             if (idx !== -1) {
-                datosTurnos[idx].estado = est.estado;
+                let estadoVisual = est.estado;
+
+                if (
+                    estadoVisual === "confirmado" &&
+                    turnoEstaVencido(
+                        datosTurnos[idx].fechaOriginal,
+                        datosTurnos[idx].duracion
+                    )
+                ) {
+                    estadoVisual = "vencido";
+                };
+
+                datosTurnos[idx].estado = estadoVisual;
                 actualizarTarjeta(datosTurnos[idx]);
             }
         });

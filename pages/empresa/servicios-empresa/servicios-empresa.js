@@ -293,19 +293,30 @@ function leerHorariosDesdeUI() {
     return data;
 };
 
+const MAPA_DIAS_FRONT = {
+    lunes: "Lun",
+    martes: "Mar",
+    miércoles: "Mié",
+    jueves: "Jue",
+    viernes: "Vie",
+    sábado: "Sáb",
+    domingo: "Dom"
+};
+
 function adaptarHorariosDesdeBackend(listaDisponibilidades) {
     const horarios = {};
 
     listaDisponibilidades.forEach(d => {
-        const dia = d.dia;
+        const diaUI = MAPA_DIAS_FRONT[d.dia];
+        if (!diaUI) return;
 
-        if (!horarios[dia]) {
-            horarios[dia] = [];
+        if (!horarios[diaUI]) {
+            horarios[diaUI] = [];
         }
 
-        horarios[dia].push({
-            desde: d.hora_inicio.slice(0, 5), // "09:00"
-            hasta: d.hora_fin.slice(0, 5),    // "17:00"
+        horarios[diaUI].push({
+            desde: d.hora_inicio.slice(0, 5),
+            hasta: d.hora_fin.slice(0, 5),
             int: d.intervalo,
             max: d.cant_turnos_max
         });

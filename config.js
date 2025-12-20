@@ -31,7 +31,7 @@ export function formatearFecha(fechaISO) {
     return "";
 };
 
-export async function formatearHora(fechaISO) {
+export function formatearHora(fechaISO) {
     if (!fechaISO) return "—";
     const partes = fechaISO.split("T");
     if (partes.length < 2) return "—";
