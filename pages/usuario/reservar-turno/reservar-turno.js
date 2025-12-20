@@ -63,7 +63,7 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
     console.log("Profesional ID:", servicio.profesional_id);
     console.log("Disponibilidades:", servicio.disponibilidades);
     console.log("Turnos actuales:", servicio.turnos_actuales);
-    const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
+    //const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
     const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
     console.log("📦 disponibilidades del día:", disponibilidadesDia);
 
@@ -78,12 +78,48 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
         // Solo permitimos la disponibilidad si no supera cant_max_turnos
         console.log("Hora disponible:", d.hora, "Turnos en esa hora:", turnosEnHora);
 
-        const ocupada = estaHoraOcupada(fechaSeleccionada, d.hora, rangosOcupados, servicio.duracion);
-        console.log("Está ocupada?", ocupada);
+        //const ocupada = estaHoraOcupada(fechaSeleccionada, d.hora, rangosOcupados, servicio.duracion);
+        //console.log("Está ocupada?", ocupada);
 
-        return turnosEnHora < Number(d.cant_max_turnos) && !ocupada;
+        return turnosEnHora < Number(d.cant_max_turnos); // && !ocupada;
     });
 };
+
+/*
+function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
+    console.log("🚀 calcularHorariosDisponibles EJECUTADO");
+    console.log("Servicio recibido:", servicio.nombre, "Profesional ID:", servicio.profesional_id);
+
+    const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
+    const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
+    console.log("📦 Disponibilidades del día:", disponibilidadesDia);
+
+    const horariosDisponibles = [];
+
+    for (const disponibilidad of disponibilidadesDia) {
+        // Contamos cuántos turnos ya hay en esta fecha y hora
+        const turnosEnHora = servicio.turnos_actuales.filter(t => {
+            const tFecha = t.inicio.toISOString().split("T")[0]; // "YYYY-MM-DD"
+            const tHora = t.inicio.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+            return tFecha === fechaSeleccionada && tHora === disponibilidad.hora;
+        }).length;
+
+        console.log("Hora:", disponibilidad.hora, "Turnos en esa hora:", turnosEnHora);
+
+        // Verificamos si el rango está ocupado
+        const ocupada = estaHoraOcupada(fechaSeleccionada, disponibilidad.hora, rangosOcupados, servicio.duracion);
+        console.log("Está ocupada?", ocupada);
+
+        // Agregamos solo si hay espacio
+        const puedeReservar = turnosEnHora < Number(disponibilidad.cant_max_turnos) && !ocupada;
+        if (puedeReservar) {
+            horariosDisponibles.push(disponibilidad);
+        }
+    }
+
+    return horariosDisponibles;
+}
+*/
 
 function calcularHorariosCualquiera(servicios, fechaSeleccionada) {
     const horasSet = new Set();
