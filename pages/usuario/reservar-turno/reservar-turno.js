@@ -377,7 +377,6 @@ function generarDiasCalendario() {
     disponibilidadDias = {};
 
     for (let i = 0; i < 56; i++) {  // 56 días
-        console.log("🗓️ evaluando fecha:", iso);
         console.log("profesionalIndiferente:", profesionalIndiferente);
         console.log("serviciosSeleccionados:", serviciosSeleccionados);
         console.log("servicioConProfesionalSeleccionado:", servicioConProfesionalSeleccionado);
@@ -385,6 +384,7 @@ function generarDiasCalendario() {
         fecha.setDate(hoy.getDate() + i);
 
         const iso = fecha.toISOString().split("T")[0];
+        console.log("🗓️ evaluando fecha:", iso);
 
         const diaSemana = fecha.toLocaleString("es-ES", { weekday: "short" }).toUpperCase();
         const mesLower = fecha.toLocaleString("es-ES", { month: "short" }).toLowerCase();
