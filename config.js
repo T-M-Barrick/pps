@@ -10,15 +10,25 @@ export async function manejarErrorRespuesta(resp, defaultMsg = "Error inesperado
     }
 
     return data; // <-- devuelve JSON
-}
+};
 
 export function formatearFecha(fechaISO) {
-    if (!fechaISO) return "—";
+    if (!fechaISO) return "";
 
-    // Tomar solo fecha, ignorando la zona
-    console.log("fechaISO:", fechaISO, typeof fechaISO);
-    const [year, month, day] = fechaISO.split("T")[0].split("-").map(Number);
-    return `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
+    if (fechaISO instanceof Date) {
+        const anio = fechaISO.getFullYear();
+        const mes = String(fechaISO.getMonth() + 1).padStart(2, "0");
+        const dia = String(fechaISO.getDate()).padStart(2, "0");
+        return `${dia}/${mes}/${anio}`;
+    };
+
+    if (typeof fechaISO === "string") {
+        const [year, month, day] = fechaISO.split("T")[0].split("-").map(Number);
+        return `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
+    };
+
+    console.error("Fecha inválida:", fechaISO);
+    return "";
 };
 
 export async function formatearHora(fechaISO) {
