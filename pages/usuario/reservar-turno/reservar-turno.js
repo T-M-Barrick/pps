@@ -56,6 +56,7 @@ function estaHoraOcupada(fechaISO, hora, rangosOcupados, duracionServicio) {
         inicio < r.fin && fin > r.inicio
     );
 }
+/*
 function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
     console.log("🚀 calcularHorariosDisponibles EJECUTADO");
     console.log("servicio recibido:", servicio);
@@ -84,13 +85,13 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
         return turnosEnHora < Number(d.cant_max_turnos); // && !ocupada;
     });
 };
+*/
 
-/*
 function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
     console.log("🚀 calcularHorariosDisponibles EJECUTADO");
     console.log("Servicio recibido:", servicio.nombre, "Profesional ID:", servicio.profesional_id);
 
-    const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
+    // const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
     const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
     console.log("📦 Disponibilidades del día:", disponibilidadesDia);
 
@@ -107,19 +108,21 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
         console.log("Hora:", disponibilidad.hora, "Turnos en esa hora:", turnosEnHora);
 
         // Verificamos si el rango está ocupado
-        const ocupada = estaHoraOcupada(fechaSeleccionada, disponibilidad.hora, rangosOcupados, servicio.duracion);
-        console.log("Está ocupada?", ocupada);
+        // const ocupada = estaHoraOcupada(fechaSeleccionada, disponibilidad.hora, rangosOcupados, servicio.duracion);
+        // console.log("Está ocupada?", ocupada);
 
         // Agregamos solo si hay espacio
-        const puedeReservar = turnosEnHora < Number(disponibilidad.cant_max_turnos) && !ocupada;
+        const puedeReservar = turnosEnHora < Number(disponibilidad.cant_max_turnos); // && !ocupada;
+        console.log("se puede reservar?", puedeReservar);
         if (puedeReservar) {
+            console.log(disponibilidad);
             horariosDisponibles.push(disponibilidad);
         }
     }
+    console.log("Horarios Disponibles OK", horariosDisponibles);
 
     return horariosDisponibles;
-}
-*/
+};
 
 function calcularHorariosCualquiera(servicios, fechaSeleccionada) {
     const horasSet = new Set();
