@@ -60,9 +60,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("btnCerrarModal").addEventListener("click", () => {
         cerrarDetalleTurno();
     });
-    document.getElementById("btnCerrarCalif").addEventListener("click", () => {
-        cerrarCalificacion();
-    });
+
+    document.getElementById("btnEnviarCalificacion").addEventListener("click", enviarCalificacion);
+
+    document.getElementById("btnCerrarCalif").addEventListener("click", cerrarCalificacion);
 
 });
 
