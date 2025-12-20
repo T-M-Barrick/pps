@@ -49,7 +49,7 @@ function renderFavoritos() {
 
                 <div class="favorito-rating">
                     ${generarEstrellas(emp.calificacion)}
-                    <span class="rating-num">${emp.calificacion.toFixed(1)}</span>
+                    <span class="rating-num">${(emp.calificacion / 2).toFixed(1)}</span>
                 </div>
             </div>
         `;

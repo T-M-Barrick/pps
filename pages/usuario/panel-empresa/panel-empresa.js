@@ -38,22 +38,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (calificacionEl) {
             if (empresa.calificacion !== undefined && empresa.calificacion !== null) {
-                const calificacion = empresa.calificacion;
+
+                const calificacion = empresa.calificacion / 2;
 
                 const estrellasLlenas = Math.floor(calificacion);
                 const mediaEstrella = calificacion % 1 >= 0.5 ? 1 : 0;
-                const estrellasVacias = 5 - estrellasLlenas - mediaEstrella;
+                const estrellasVacias = Math.max(0, 5 - estrellasLlenas - mediaEstrella);
 
                 let html = "";
                 html += "⭐".repeat(estrellasLlenas);
                 html += mediaEstrella ? "✩" : "";
                 html += "☆".repeat(estrellasVacias);
 
-                calificacionEl.innerHTML = `${html} <span class="calificacion-num">(${calificacion})</span>`;
+                calificacionEl.innerHTML = `
+                    ${html} <span class="calificacion-num">(${calificacion.toFixed(1)})</span>
+                `;
             } else {
                 calificacionEl.textContent = "—";
             }
-        }
+        };
+
 
         if (btnReservar) {
             btnReservar.onclick = () => {
