@@ -76,8 +76,12 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
         }).length;
 
         // Solo permitimos la disponibilidad si no supera cant_max_turnos
-        return turnosEnHora < d.cant_max_turnos &&
-               !estaHoraOcupada(fechaSeleccionada, d.hora, rangosOcupados, servicio.duracion);
+        console.log("Hora disponible:", d.hora, "Turnos en esa hora:", turnosEnHora);
+
+        const ocupada = estaHoraOcupada(fechaSeleccionada, d.hora, rangosOcupados, servicio.duracion);
+        console.log("Está ocupada?", ocupada);
+
+        return turnosEnHora < d.cant_max_turnos && !ocupada;
     });
 };
 
