@@ -640,7 +640,7 @@ window.mostrarModalReserva = function () {
     let profesionalTexto = "";
     if (profesionalIndiferente) {
         profesionalTexto = "Cualquiera disponible";
-    } else if (servicio?.profesional_apellido) {
+    } else if (servicio.profesional_apellido) {
         profesionalTexto = `${servicio.profesional_apellido}, ${servicio.profesional_nombre}`;
     }
     const fecha = formatearFecha(fechaSeleccionada);
