@@ -209,6 +209,12 @@ function formatearTurnosActuales(turnos) {
 // ==============================
 function adaptarServicio(ser) {
 
+    let profesionalTexto = null
+    if (ser.profesional_id) {
+        profesionalTexto = `${ser.profesional_apellido}, ${ser.profesional_nombre}`
+
+    };
+
     return {
         id: ser.id,
         nombre: ser.nombre,
@@ -217,11 +223,11 @@ function adaptarServicio(ser) {
         aclaracion: ser.aclaracion,
         profesional_id: ser.profesional_id,
         profesional_dni: ser.profesional_dni,
-        profesional: `${ser.profesional_apellido}, ${ser.profesional_nombre}`,
+        profesional: profesionalTexto,
         disponibilidades: ser.disponibilidades,
         turnos_actuales: formatearTurnosActuales(ser.turnos_actuales)
     };
-}
+};
 
 /* ============================================================
    INDICADORES SUPERIORES DE PASOS
@@ -660,9 +666,8 @@ window.mostrarModalReserva = function () {
     let profesionalTexto = '—';
     if (profesionalIndiferente) {
         profesionalTexto = "Cualquiera disponible";
-    };
-    if (servicio.profesional_apellido) {
-        profesionalTexto = `${servicio.profesional_apellido}, ${servicio.profesional_nombre}`;
+    } else if (servicio.profesional) {
+        profesionalTexto = servicio.profesional
     };
 
     const fecha = formatearFecha(fechaSeleccionada);
