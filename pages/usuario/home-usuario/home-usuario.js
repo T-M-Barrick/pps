@@ -149,7 +149,7 @@ function calcularTiempoRestante(fechaHoraISO, duracionMinutos) {
 
     const inicioLocal = new Date(fechaHoraISO);
     console.log('fecha en tiempo restante de iniciolocal', inicioLocal)
-    const inicioUTC = inicioLocal.getTime() + (inicioLocal.getTimezoneOffset() * 60000);
+    const inicioUTC = inicioLocal.getTime();
     const finUTC = inicioUTC + (duracionMinutos ?? 0) * 60000;
 
     const ahoraUTC = Date.now();
