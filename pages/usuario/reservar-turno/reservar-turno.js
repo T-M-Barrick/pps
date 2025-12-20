@@ -91,7 +91,7 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
     console.log("🚀 calcularHorariosDisponibles EJECUTADO");
     console.log("Servicio recibido:", servicio.nombre, "Profesional ID:", servicio.profesional_id);
 
-    // const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
+    const rangosOcupados = obtenerRangosOcupados(servicio.turnos_actuales);
     const disponibilidadesDia = obtenerDisponibilidadesDelDia(servicio, fechaSeleccionada);
     console.log("📦 Disponibilidades del día:", disponibilidadesDia);
 
@@ -108,11 +108,11 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
         console.log("Hora:", disponibilidad.hora, "Turnos en esa hora:", turnosEnHora);
 
         // Verificamos si el rango está ocupado
-        // const ocupada = estaHoraOcupada(fechaSeleccionada, disponibilidad.hora, rangosOcupados, servicio.duracion);
+        const ocupada = estaHoraOcupada(fechaSeleccionada, disponibilidad.hora, rangosOcupados, servicio.duracion);
         // console.log("Está ocupada?", ocupada);
 
         // Agregamos solo si hay espacio
-        const puedeReservar = turnosEnHora < Number(disponibilidad.cant_turnos_max); // && !ocupada;
+        const puedeReservar = turnosEnHora < Number(disponibilidad.cant_turnos_max) && !ocupada;
 
         // console.log("se puede reservar?", puedeReservar, turnosEnHora, disponibilidad.cant_turnos_max);
         if (puedeReservar) {
@@ -157,6 +157,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     renderizarServicios();
     mostrarPaso(1);
+
+    document.getElementById("btnConfirmarReserva").addEventListener("click", aceptarTurno);
 });
 
 async function cargarTurnosDisponibles(empresaId) {
@@ -634,15 +636,19 @@ function renderizarResumen() {
 window.mostrarModalReserva = function () {
     const servicio = servicioConProfesionalSeleccionado 
                      || (serviciosSeleccionados && serviciosSeleccionados[0]); // tomamos uno representativo
-    const profesional = profesionalIndiferente 
-                        ? "Cualquiera disponible" 
-                        : (servicio?.profesional || "");
+
+    let profesionalTexto = "";
+    if (profesionalIndiferente) {
+        profesionalTexto = "Cualquiera disponible";
+    } else if (servicio?.profesional_apellido) {
+        profesionalTexto = `${servicio.profesional_apellido}, ${servicio.profesional_nombre}`;
+    }
     const fecha = formatearFecha(fechaSeleccionada);
 
     document.getElementById("modalReserva").style.display = "flex";
 
     document.getElementById("modal-resumen-servicio").textContent = servicio?.nombre || "-";
-    document.getElementById("modal-resumen-profesional").textContent = profesional;
+    document.getElementById("modal-resumen-profesional").textContent = profesionalTexto;
     document.getElementById("modal-resumen-fechahora").textContent =
         `${fecha} - ${horaSeleccionada}`;
     document.getElementById("precioConfirmado").textContent = servicio?.precio ? `$ ${servicio.precio}` : "-";
