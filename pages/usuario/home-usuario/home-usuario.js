@@ -759,7 +759,7 @@ async function enviarCalificacion() {
     try {
         // 1️⃣ Enviar calificación al backend
         const data = await manejarErrorRespuesta(
-            await fetch(`${BACKEND_URL}/calificacion`, {
+            await fetch(`${BACKEND_URL}/users/calificacion`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
