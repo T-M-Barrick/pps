@@ -5,7 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     renderFavoritos();
 });
 
-function generarEstrellas(calificacion) {
+function generarEstrellas(calificacion10) {
+    const calificacion = calificacion10 / 2;
+
     let full = Math.floor(calificacion);
     let half = calificacion % 1 >= 0.5;
     let empty = 5 - full - (half ? 1 : 0);
@@ -17,7 +19,7 @@ function generarEstrellas(calificacion) {
     for (let i = 0; i < empty; i++) html += `<i class="fa-regular fa-star star-empty"></i>`;
 
     return html;
-}
+};
 
 function renderFavoritos() {
     cont.innerHTML = "";
