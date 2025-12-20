@@ -76,13 +76,13 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
             return tFecha === fechaSeleccionada && tHora === d.hora;
         }).length;
 
-        // Solo permitimos la disponibilidad si no supera cant_max_turnos
+        // Solo permitimos la disponibilidad si no supera cant_turnos_max
         console.log("Hora disponible:", d.hora, "Turnos en esa hora:", turnosEnHora);
 
         //const ocupada = estaHoraOcupada(fechaSeleccionada, d.hora, rangosOcupados, servicio.duracion);
         //console.log("Está ocupada?", ocupada);
 
-        return turnosEnHora < Number(d.cant_max_turnos); // && !ocupada;
+        return turnosEnHora < Number(d.cant_turnos_maxs); // && !ocupada;
     });
 };
 */
@@ -112,9 +112,9 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
         // console.log("Está ocupada?", ocupada);
 
         // Agregamos solo si hay espacio
-        const puedeReservar = turnosEnHora < Number(disponibilidad.cant_max_turnos); // && !ocupada;
+        const puedeReservar = turnosEnHora < Number(disponibilidad.cant_turnos_max); // && !ocupada;
 
-        console.log("se puede reservar?", puedeReservar, turnosEnHora, disponibilidad.cant_max_turnos);
+        // console.log("se puede reservar?", puedeReservar, turnosEnHora, disponibilidad.cant_turnos_max);
         if (puedeReservar) {
             console.log(disponibilidad);
             horariosDisponibles.push(disponibilidad);
@@ -417,7 +417,7 @@ let disponibilidadDias = {};
 let indiceSemanaActual = 0;
 let maxSemana = 0;
 
-/* Genera 56 días + disponibilidad según turnos actuales y cant_max_turnos */
+/* Genera 56 días + disponibilidad según turnos actuales y cant_turnos_max */
 function generarDiasCalendario() {
     const hoy = new Date();
     diasCalendario = [];
@@ -443,7 +443,7 @@ function generarDiasCalendario() {
             diaSemana: diaSemana
         });
 
-        // Chequeamos si hay al menos un horario disponible para esta fecha y que respete cant_max_turnos
+        // Chequeamos si hay al menos un horario disponible para esta fecha y que respete cant_turnos_max
         let tieneHorarios = false;
 
         if (profesionalIndiferente && serviciosSeleccionados) {
