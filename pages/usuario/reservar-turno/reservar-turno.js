@@ -100,7 +100,10 @@ function calcularHorariosDisponibles(servicio, fechaSeleccionada) {
     for (const disponibilidad of disponibilidadesDia) {
         // Contamos cuántos turnos ya hay en esta fecha y hora
         const turnosEnHora = servicio.turnos_actuales.filter(t => {
-            const tFecha = t.inicio.toISOString().split("T")[0]; // "YYYY-MM-DD"
+            const y = t.inicio.getFullYear();
+            const m = String(t.inicio.getMonth() + 1).padStart(2, "0");
+            const d = String(t.inicio.getDate()).padStart(2, "0");
+            const tFecha = `${y}-${m}-${d}`;
             const tHora = t.inicio.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
             return tFecha === fechaSeleccionada && tHora === disponibilidad.hora;
         }).length;
@@ -594,7 +597,13 @@ function renderHorariosParaFecha() {
     if (horariosDisponibles.length === 0) {
         cont.innerHTML = "<p>No hay horarios disponibles para este día.</p>";
         return;
-    }
+    };
+
+    horariosDisponibles.sort((a, b) => {
+        const [h1, m1] = a.hora.split(":").map(Number);
+        const [h2, m2] = b.hora.split(":").map(Number);
+        return h1 * 60 + m1 - (h2 * 60 + m2);
+    });
 
     cont.innerHTML = horariosDisponibles.map(d => `
         <button class="boton-hora"
